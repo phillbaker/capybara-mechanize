@@ -9,13 +9,17 @@ This gem is a [Capybara](http://github.com/jnicklas/capybara) extension. I have 
 
 Thanks to [Pinkelstar](http://www.pinkelstar.com) for giving me the time and the need to develop this gem.
 
+### Installation
+
+    gem install capybara-mechanize
+
 ### Usage without Cucumber
 
     require 'capybara/mechanize'
 
 ### Usage with Cucumber and tags
 
-A @mechanize tag is add to your hooks when you add the following line to your env.rb
+A @mechanize tag is added to your hooks when you add the following line to your env.rb
 
     require 'capybara/mechanize/cucumber'
 
