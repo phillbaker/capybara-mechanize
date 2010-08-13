@@ -1,0 +1,1 @@
+require 'capybara/driver/mechanize'
