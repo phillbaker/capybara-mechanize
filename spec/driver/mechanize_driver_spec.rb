@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Capybara::Driver::Mechanize do
+describe "Capybara::Driver::Mechanize, in local model" do
   before do
     @driver = Capybara::Driver::Mechanize.new(TestApp)
   end
@@ -18,7 +18,6 @@ describe Capybara::Driver::Mechanize do
 
   # Pending:
   # it_should_behave_like "driver with infinite redirect detection"
-
 
   it "should default to local mode" do
     @driver.remote?('http://www.local.com').should be false
