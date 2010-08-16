@@ -1,13 +1,13 @@
 require 'mechanize'
 
 class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
-  
+
   def initialize(*args)
     super
     @agent = ::Mechanize.new
     @agent.redirect_ok = false
   end
-  
+    
   def visit(url)
     get url
   end
@@ -18,24 +18,25 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   end
   
   def current_url
-    (response_proxy && response_proxy.current_url) || super
+    last_request_remote? ? remote_response.current_url : super
   end
   
   def response
-    response_proxy || super
+    last_request_remote? ? remote_response : super
   end
-
+  
   # TODO see how this can be cleaned up
   def follow_redirect!
     unless response.redirect?
       raise "Last response was not a redirect. Cannot follow_redirect!"
     end
 
-    if response.respond_to?(:page)
-      location = response.page.response['Location'] 
-    else
-      location = response['Location']
-    end
+    location = if last_request_remote?
+        remote_response.page.response['Location'] 
+      else
+        response['Location']
+      end
+    
     get(location)
   end
   
@@ -60,17 +61,24 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
 
   private
 
+  def last_request_remote?
+    !!@last_request_remote
+  end
+
   def process_remote_request(method, url, *options)
     if remote?(url)
       url = File.join((Capybara.app_host || Capybara.default_host), url) if URI.parse(url).host.nil?
       reset_cache
       @agent.send *( [method, url] + options)
+      @last_request_remote = true
       follow_redirects!
       true
+    else
+      @last_request_remote = false
     end
   end
 
-  def response_proxy
+  def remote_response
     ResponseProxy.new(@agent.current_page) if @agent.current_page
   end
   
