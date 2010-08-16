@@ -1,7 +1,11 @@
 require 'mechanize'
 
 class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
-
+  extend Forwardable
+  
+  def_delegator :agent, :scheme_handlers
+  def_delegator :agent, :scheme_handlers=
+  
   def initialize(*args)
     super
     @agent = ::Mechanize.new
@@ -60,6 +64,8 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   end
 
   private
+  
+  attr_reader :agent
 
   def last_request_remote?
     !!@last_request_remote
