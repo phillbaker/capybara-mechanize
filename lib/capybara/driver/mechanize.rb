@@ -11,10 +11,6 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
     @agent = ::Mechanize.new
     @agent.redirect_ok = false
   end
-    
-  def visit(url)
-    get url
-  end
   
   def cleanup!
     @agent.cookie_jar.clear!
@@ -34,7 +30,7 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
     unless response.redirect?
       raise "Last response was not a redirect. Cannot follow_redirect!"
     end
-
+    
     location = if last_request_remote?
         remote_response.page.response['Location'] 
       else
@@ -45,11 +41,19 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   end
   
   def get(url, params = {}, headers = {})
-    process_remote_request(:get, url) || super
+    if remote?(url)
+      process_remote_request(:get, url)
+    else 
+      super
+    end
   end
 
   def post(url, params = {}, headers = {})
-    process_remote_request(:post, url, params, headers) || super
+    if remote?(url)
+      process_remote_request(:post, url, params, headers)
+    else 
+      super
+    end
   end
 
   def remote?(url)
@@ -63,10 +67,10 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
     end
   end
 
-  private
-  
   attr_reader :agent
 
+  private
+  
   def last_request_remote?
     !!@last_request_remote
   end
@@ -77,8 +81,6 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       reset_cache
       @agent.send *( [method, url] + options)
       @last_request_remote = true
-      follow_redirects!
-      true
     else
       @last_request_remote = false
     end

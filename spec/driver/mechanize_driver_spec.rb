@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "Capybara::Driver::Mechanize, in local model" do
   before do
-    @driver = Capybara::Driver::Mechanize.new(TestApp)
+    @driver = Capybara::Driver::Mechanize.new(ExtendedTestApp)
   end
   
   it "should throw an error when no rack app is given" do
@@ -15,9 +15,7 @@ describe "Capybara::Driver::Mechanize, in local model" do
   it_should_behave_like "driver with header support"
   it_should_behave_like "driver with status code support"
   it_should_behave_like "driver with cookies support"
-
-  # Pending:
-  # it_should_behave_like "driver with infinite redirect detection"
+  it_should_behave_like "driver with infinite redirect detection"
 
   it "should default to local mode" do
     @driver.remote?('http://www.local.com').should be false
@@ -50,10 +48,31 @@ describe "Capybara::Driver::Mechanize, in local model" do
     it "should treat other urls as remote" do
       @driver.remote?('http://www.remote.com').should be true
     end
+
+    it "should receive the right host" do
+      @driver.visit('http://www.local.com/host')
+      @driver.body.should include('local.com')
+    end
+
+    it "should follow redirects from local to remote" do
+      @driver.visit("http://www.local.com/redirect_to/#{REMOTE_TEST_URL}/host")
+      @driver.body.should include(REMOTE_TEST_HOST)
+    end
     
     after :each do
       Capybara.default_host = nil
     end
+  end
+
+  it "should include the right host when remote" do
+    @driver.visit("#{REMOTE_TEST_URL}/host")
+    @driver.body.should include(REMOTE_TEST_HOST)
+  end
+
+  
+  it "should follow redirects from remote to local" do
+    @driver.visit("#{REMOTE_TEST_URL}/redirect_to/http://www.local.com/host")
+    @driver.body.should include('local.com')
   end
 
 end

@@ -4,6 +4,8 @@ require 'capybara/mechanize'
 require 'sinatra'
 require 'spec'
 
+require 'capybara/spec/extended_test_app'
+
 # TODO move this stuff into capybara
 require 'capybara/spec/driver'
 require 'capybara/spec/session'
@@ -17,3 +19,5 @@ Spec::Runner.configure do |config|
     Capybara.default_selector = :xpath
   end
 end
+REMOTE_TEST_HOST = "capybara-testapp.heroku.com"
+REMOTE_TEST_URL = "http://#{REMOTE_TEST_HOST}:8070"

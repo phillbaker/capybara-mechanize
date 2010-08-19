@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Capybara::Session do
   context 'with remote mechanize driver' do
     before(:each) do
-      Capybara.app_host = "http://capybara-testapp.heroku.com"
+      Capybara.app_host = REMOTE_TEST_URL
     end
 
     after(:each) do
