@@ -55,6 +55,22 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       super
     end
   end
+  
+  def put(url, params = {}, headers = {})
+    if remote?(url)
+      process_remote_request(:put, url)
+    else 
+      super
+    end
+  end
+
+  def delete(url, params = {}, headers = {})
+    if remote?(url)
+      process_remote_request(:delete, url, params, headers)
+    else 
+      super
+    end
+  end
 
   def remote?(url)
     if !Capybara.app_host.nil? 
