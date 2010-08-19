@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency(%q<mechanize>, ["= 1.0.0"])
   s.add_runtime_dependency(%q<capybara>, ["= 0.3.9"])
+  s.add_runtime_dependency(%q<rack>, ["= 1.2.0"])
   s.add_development_dependency(%q<rspec>, ["= 1.3.0"])
 end
 
