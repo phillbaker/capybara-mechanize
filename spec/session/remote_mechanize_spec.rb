@@ -29,11 +29,9 @@ describe Capybara::Session do
 
     describe '#click_link' do
       it "should use data-method if available" do
-        pending "Needs to be implemented" do
-          @session.visit "/with_html"
-          @session.click_link "A link with data-method"
-          @session.body.should == 'The requested object was deleted'
-        end
+        @session.visit "/with_html"
+        @session.click_link "A link with data-method"
+        @session.body.should == 'The requested object was deleted'
       end
     end
 
