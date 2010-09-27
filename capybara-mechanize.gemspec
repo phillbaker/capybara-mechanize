@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeroen van Dijk"]
-  s.date = %q{2010-08-12}
+  s.date = %q{2010-09-27}
   s.summary = %q{RackTest driver for Capybara with remote request support}
   s.description = %q{RackTest driver for Capybara, but with remote request support thanks to mechanize}
 
@@ -16,9 +16,5 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-
-  s.add_runtime_dependency(%q<mechanize>, ["= 1.0.0"])
-  s.add_runtime_dependency(%q<capybara>, ["= 0.3.9"])
-  s.add_development_dependency(%q<rspec>, ["= 1.3.0"])
 end
 

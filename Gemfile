@@ -1,9 +1,10 @@
-# A sample Gemfile
-source :gemcutter
+source 'http://rubygems.org'
 
-gemspec
+gem 'capybara', :git => 'git://github.com/jnicklas/capybara.git'
+gem 'mechanize', '~> 1.0.0'
 
 group :development do
-  gem "jeweler"
-  gem "sinatra"
+  gem 'rspec', '~> 1.3.0'
+  gem 'jeweler'
+  gem 'sinatra'
 end
