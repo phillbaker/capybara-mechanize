@@ -12,6 +12,12 @@ GIT
       selenium-webdriver (>= 0.0.27)
       xpath (>= 0.1.0)
 
+PATH
+  remote: .
+  specs:
+    capybara-mechanize (0.2.3)
+      mechanize (~> 1.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -22,12 +28,6 @@ GEM
     ffi (0.6.3)
       rake (>= 0.8.7)
     gem_plugin (0.2.3)
-    gemcutter (0.6.1)
-    git (1.2.5)
-    jeweler (1.4.0)
-      gemcutter (>= 0.1.0)
-      git (>= 1.2.5)
-      rubyforge (>= 2.0.0)
     json_pure (1.4.6)
     mechanize (1.0.0)
       nokogiri (>= 1.2.1)
@@ -50,8 +50,6 @@ GEM
     rspec-mocks (2.0.0.beta.22)
       rspec-core (= 2.0.0.beta.22)
       rspec-expectations (= 2.0.0.beta.22)
-    rubyforge (2.0.4)
-      json_pure (>= 1.1.7)
     rubyzip (0.9.4)
     selenium-webdriver (0.0.28)
       ffi (>= 0.6.1)
@@ -66,7 +64,7 @@ PLATFORMS
 
 DEPENDENCIES
   capybara!
-  jeweler
+  capybara-mechanize!
   mechanize (~> 1.0.0)
   mongrel (~> 1.2.pre)
   rspec (~> 2.0.0.beta.22)
