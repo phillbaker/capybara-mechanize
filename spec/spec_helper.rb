@@ -20,9 +20,5 @@ Spec::Runner.configure do |config|
   end
 end
 
-# Until this library is merge with capybara there needs to be local app and you need to add
-# 127.0.0.1 capybara-testapp.heroku.com to your host file
-# Run the app with the following line: 
-# ruby -rrubygems lib/capybara/spec/extended_test_app.rb
 REMOTE_TEST_HOST = "capybara-testapp.heroku.com"
 REMOTE_TEST_URL = "http://#{REMOTE_TEST_HOST}:8070"
