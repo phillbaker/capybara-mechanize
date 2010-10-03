@@ -12,7 +12,7 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
     @agent.redirect_ok = false
   end
   
-  def cleanup!
+  def reset!
     @agent.cookie_jar.clear!
     super
   end
