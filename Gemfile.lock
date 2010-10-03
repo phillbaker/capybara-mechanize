@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/jnicklas/capybara.git
-  revision: 124ec5d
+  revision: 1afc4c6c61248d3e7b373096568513416471f600
   specs:
     capybara (0.3.9)
       celerity (>= 0.7.9)
@@ -36,7 +36,7 @@ GEM
       daemons (~> 1.0.10)
       gem_plugin (~> 0.2.3)
     nokogiri (1.4.3.1)
-    rack (1.2.0)
+    rack (1.2.1)
     rack-test (0.5.6)
       rack (>= 1.0)
     rake (0.8.7)
@@ -68,6 +68,6 @@ DEPENDENCIES
   capybara!
   jeweler
   mechanize (~> 1.0.0)
-  mongrel
+  mongrel (~> 1.2.pre)
   rspec (~> 2.0.0.beta.22)
   sinatra
