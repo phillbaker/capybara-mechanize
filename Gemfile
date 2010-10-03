@@ -6,4 +6,5 @@ gemspec
 group :development do
   gem "jeweler"
   gem "sinatra"
+  gem "mongrel"
 end
