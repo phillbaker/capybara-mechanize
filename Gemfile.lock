@@ -12,6 +12,12 @@ GIT
       selenium-webdriver (>= 0.0.27)
       xpath (>= 0.1.0)
 
+PATH
+  remote: .
+  specs:
+    capybara-mechanize (0.2.3)
+      mechanize (~> 1.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -66,8 +72,9 @@ PLATFORMS
 
 DEPENDENCIES
   capybara!
+  capybara-mechanize!
   jeweler
-  mechanize (~> 1.0.0)
-  mongrel (~> 1.2.pre)
-  rspec (~> 2.0.0.beta.22)
+  mechanize (~> 1.0)
+  mongrel (>= 1.2.pre)
+  rspec (>= 2.0.0.beta.22)
   sinatra

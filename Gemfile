@@ -1,11 +1,6 @@
 source 'http://rubygems.org'
 
+# TODO: move this to the gemspec when the new capybara is released as a gem
 gem 'capybara', :git => 'git://github.com/jnicklas/capybara.git'
-gem 'mechanize', '~> 1.0.0'
 
-group :development do
-  gem 'rspec', '~> 2.0.0.beta.22'
-  gem "jeweler"
-  gem "sinatra"
-  gem "mongrel", '~> 1.2.pre'
-end
+gemspec
