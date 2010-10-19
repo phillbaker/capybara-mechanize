@@ -1,3 +1,5 @@
+require 'capybara'
+
 module Capybara
   module Driver
     autoload :Mechanize, 'capybara/driver/mechanize_driver'

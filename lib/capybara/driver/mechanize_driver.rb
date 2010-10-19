@@ -30,7 +30,7 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
     unless response.redirect?
       raise "Last response was not a redirect. Cannot follow_redirect!"
     end
-    
+
     location = if last_request_remote?
         remote_response.page.response['Location'] 
       else
@@ -43,7 +43,8 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   def get(url, params = {}, headers = {})
     if remote?(url)
       process_remote_request(:get, url)
-    else 
+    else
+      register_local_request
       super
     end
   end
@@ -51,7 +52,8 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   def post(url, params = {}, headers = {})
     if remote?(url)
       process_remote_request(:post, url, params, headers)
-    else 
+    else
+      register_local_request
       super
     end
   end
@@ -59,7 +61,8 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   def put(url, params = {}, headers = {})
     if remote?(url)
       process_remote_request(:put, url)
-    else 
+    else
+      register_local_request
       super
     end
   end
@@ -67,7 +70,8 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   def delete(url, params = {}, headers = {})
     if remote?(url)
       process_remote_request(:delete, url, params, headers)
-    else 
+    else
+      register_local_request
       super
     end
   end
@@ -79,7 +83,12 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       false
     else
       host = URI.parse(url).host
-      !(host.nil? || host.include?(Capybara.default_host))
+      
+      if host.nil? && last_request_remote?
+        true
+      else
+        !(host.nil? || host.include?(Capybara.default_host))
+      end
     end
   end
 
@@ -90,15 +99,28 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   def last_request_remote?
     !!@last_request_remote
   end
+  
+  def register_local_request
+    @last_remote_host = nil
+    @last_request_remote = false
+  end
 
   def process_remote_request(method, url, *options)
     if remote?(url)
-      url = File.join((Capybara.app_host || Capybara.default_host), url) if URI.parse(url).host.nil?
+      remote_uri = URI.parse(url)
+
+      if remote_uri.host.nil?
+        remote_host = @last_remote_host || Capybara.app_host || Capybara.default_host
+        url = File.join(remote_host, url)
+        url = "http://#{url}" unless url.include?("http")
+      else
+        @last_remote_host = "#{remote_uri.host}:#{remote_uri.port}"
+      end
+      
       reset_cache
       @agent.send *( [method, url] + options)
+        
       @last_request_remote = true
-    else
-      @last_request_remote = false
     end
   end
 

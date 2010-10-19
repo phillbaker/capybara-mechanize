@@ -22,6 +22,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     celerity (0.8.2)
+    columnize (0.3.1)
     culerity (0.2.12)
     daemons (1.0.10)
     diff-lcs (1.1.2)
@@ -29,6 +30,7 @@ GEM
       rake (>= 0.8.7)
     gem_plugin (0.2.3)
     json_pure (1.4.6)
+    linecache (0.43)
     mechanize (1.0.0)
       nokogiri (>= 1.2.1)
     mime-types (1.16)
@@ -50,6 +52,11 @@ GEM
     rspec-mocks (2.0.0.beta.22)
       rspec-core (= 2.0.0.beta.22)
       rspec-expectations (= 2.0.0.beta.22)
+    ruby-debug (0.10.3)
+      columnize (>= 0.1)
+      ruby-debug-base (~> 0.10.3.0)
+    ruby-debug-base (0.10.3)
+      linecache (>= 0.3)
     rubyzip (0.9.4)
     selenium-webdriver (0.0.28)
       ffi (>= 0.6.1)
@@ -68,4 +75,5 @@ DEPENDENCIES
   mechanize (~> 1.0.0)
   mongrel (~> 1.2.pre)
   rspec (~> 2.0.0.beta.22)
+  ruby-debug
   sinatra

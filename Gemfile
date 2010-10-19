@@ -9,4 +9,5 @@ group :development do
   gem 'rspec', '~> 2.0.0.beta.22'
   gem "sinatra"
   gem "mongrel", '~> 1.2.pre'
+  gem "ruby-debug"
 end

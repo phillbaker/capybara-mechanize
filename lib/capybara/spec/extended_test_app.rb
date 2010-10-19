@@ -8,7 +8,21 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
   end
   
   get '/host' do
-    "current host is #{request.host}"
+    "current host is #{request.host}:#{request.port}, method get"
+  end
+  
+  get '/form_with_relative_action_to_host' do
+    %{<form action="/host" method="post">
+       <input type="submit" value="submit" />
+      </form>}
+  end
+  
+  get '/relative_link_to_host' do
+    %{<a href="/host">host</a>}
+  end
+  
+  post '/host' do
+    "current host is #{request.host}:#{request.port}, method post"
   end
 end
 
