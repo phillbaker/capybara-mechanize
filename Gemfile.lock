@@ -1,8 +1,14 @@
-GIT
-  remote: git://github.com/jnicklas/capybara.git
-  revision: 1afc4c6c61248d3e7b373096568513416471f600
+PATH
+  remote: .
   specs:
-    capybara (0.3.9)
+    capybara-mechanize (0.2.3)
+      capybara (~> 0.4.0)
+      mechanize (~> 1.0.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    capybara (0.4.0)
       celerity (>= 0.7.9)
       culerity (>= 0.2.4)
       mime-types (>= 1.16)
@@ -10,18 +16,10 @@ GIT
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       selenium-webdriver (>= 0.0.27)
-      xpath (>= 0.1.0)
-
-PATH
-  remote: .
-  specs:
-    capybara-mechanize (0.2.3)
-      mechanize (~> 1.0.0)
-
-GEM
-  remote: http://rubygems.org/
-  specs:
+      xpath (~> 0.1.2)
     celerity (0.8.2)
+    childprocess (0.1.3)
+      ffi (~> 0.6.3)
     columnize (0.3.1)
     culerity (0.2.12)
     daemons (1.0.10)
@@ -42,38 +40,40 @@ GEM
     rack-test (0.5.6)
       rack (>= 1.0)
     rake (0.8.7)
-    rspec (2.0.0.beta.22)
-      rspec-core (= 2.0.0.beta.22)
-      rspec-expectations (= 2.0.0.beta.22)
-      rspec-mocks (= 2.0.0.beta.22)
-    rspec-core (2.0.0.beta.22)
-    rspec-expectations (2.0.0.beta.22)
+    rspec (2.0.1)
+      rspec-core (~> 2.0.1)
+      rspec-expectations (~> 2.0.1)
+      rspec-mocks (~> 2.0.1)
+    rspec-core (2.0.1)
+    rspec-expectations (2.0.1)
       diff-lcs (>= 1.1.2)
-    rspec-mocks (2.0.0.beta.22)
-      rspec-core (= 2.0.0.beta.22)
-      rspec-expectations (= 2.0.0.beta.22)
+    rspec-mocks (2.0.1)
+      rspec-core (~> 2.0.1)
+      rspec-expectations (~> 2.0.1)
     ruby-debug (0.10.3)
       columnize (>= 0.1)
       ruby-debug-base (~> 0.10.3.0)
     ruby-debug-base (0.10.3)
       linecache (>= 0.3)
     rubyzip (0.9.4)
-    selenium-webdriver (0.0.28)
-      ffi (>= 0.6.1)
+    selenium-webdriver (0.0.29)
+      childprocess (>= 0.0.7)
+      ffi (~> 0.6.3)
       json_pure
       rubyzip
     sinatra (1.0)
       rack (>= 1.0)
-    xpath (0.1.0)
+    xpath (0.1.2)
+      nokogiri (~> 1.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  capybara!
+  capybara (~> 0.4.0)
   capybara-mechanize!
   mechanize (~> 1.0.0)
   mongrel (~> 1.2.pre)
-  rspec (~> 2.0.0.beta.22)
+  rspec (~> 2.0.1)
   ruby-debug
   sinatra
