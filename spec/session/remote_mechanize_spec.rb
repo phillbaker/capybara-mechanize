@@ -12,7 +12,7 @@ describe Capybara::Session do
     
     
     before do      
-      @session = Capybara::Session.new(:mechanize, TestApp)
+      @session = Capybara::Session.new(:mechanize)
     end
 
     describe '#driver' do
@@ -35,7 +35,7 @@ describe Capybara::Session do
       end
     end
 
-    # Pending: Still 16 (and before the last remote mode commit 13) failing tests here (result is 658 examples, 16 failures, instead of 354 examples)
+    # Pending: Still 90 (and before the update of capybara to 0.4.0 16) failing tests here (result is 702 examples, 90 failures, instead of 381 examples)
     # it_should_behave_like "session"
 
     it_should_behave_like "session without javascript support"

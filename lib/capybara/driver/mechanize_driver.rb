@@ -6,10 +6,16 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   def_delegator :agent, :scheme_handlers
   def_delegator :agent, :scheme_handlers=
   
-  def initialize(*args)
-    super
+  def initialize(app = nil)
     @agent = ::Mechanize.new
     @agent.redirect_ok = false
+    
+    if app
+     # Delegate the RackApp to the RackTest driver
+     super(app)
+    elsif !Capybara.app_host
+      raise ArgumentError, "You have to set at least Capybara.app_host or Capybara.app"
+    end
   end
   
   def reset!

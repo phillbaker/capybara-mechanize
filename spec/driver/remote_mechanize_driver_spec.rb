@@ -10,10 +10,16 @@ describe Capybara::Driver::Mechanize do
   end
 
   before do
-    @driver = Capybara::Driver::Mechanize.new(TestApp)
+    @driver = Capybara::Driver::Mechanize.new
   end
   
   context "in remote mode" do
+    it "should not throw an error when no rack app is given" do
+      running do
+        Capybara::Driver::Mechanize.new
+      end.should_not raise_error(ArgumentError)
+    end
+
     it_should_behave_like "driver"
     it_should_behave_like "driver with header support"
     it_should_behave_like "driver with status code support"

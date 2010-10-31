@@ -5,10 +5,10 @@ describe "Capybara::Driver::Mechanize, in local model" do
     @driver = Capybara::Driver::Mechanize.new(ExtendedTestApp)
   end
   
-  it "should throw an error when no rack app is given" do
+  it "should throw an error when no rack app is given without an app host" do
     running do
-      Capybara::Driver::Mechanize.new(nil)
-    end.should raise_error(ArgumentError)
+      Capybara::Driver::Mechanize.new
+    end.should raise_error(ArgumentError, "You have to set at least Capybara.app_host or Capybara.app")
   end
   
   it_should_behave_like "driver"
