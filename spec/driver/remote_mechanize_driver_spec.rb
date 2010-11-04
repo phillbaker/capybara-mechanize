@@ -19,6 +19,11 @@ describe Capybara::Driver::Mechanize do
         Capybara::Driver::Mechanize.new
       end.should_not raise_error(ArgumentError)
     end
+    
+    it "should pass arguments through to a get request" do
+      @driver.visit("#{REMOTE_TEST_URL}/form/get", {:form => "success"})
+      @driver.body.should == %{<pre id="results">--- success\n</pre>}
+    end
 
     it_should_behave_like "driver"
     it_should_behave_like "driver with header support"

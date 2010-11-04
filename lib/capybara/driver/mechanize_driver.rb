@@ -48,7 +48,7 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   
   def get(url, params = {}, headers = {})
     if remote?(url)
-      process_remote_request(:get, url)
+      process_remote_request(:get, url, params)
     else
       register_local_request
       super
