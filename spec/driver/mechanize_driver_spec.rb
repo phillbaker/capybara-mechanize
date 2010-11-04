@@ -50,7 +50,7 @@ describe "Capybara::Driver::Mechanize, in local model" do
     end
     
     it "should treat relative paths as remote if the previous request was remote" do
-      @driver.visit('http://www.remote.com')
+      @driver.visit(REMOTE_TEST_URL)
       @driver.should be_remote('/some_relative_link')
     end
 
