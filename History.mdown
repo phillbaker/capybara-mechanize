@@ -1,0 +1,13 @@
+# Version 0.2.5
+Release date: 15-11-2010
+
+- Include parameters when sending get requests to remote hosts [David, Iain McCoy]
+- specifiying version of sinatra and fixing remote test URL [David, Iain McCoy]
+- Make sure a RackApp isn't needed when we only want to test a remote app [Jeroen van Dijk]
+- Make sure that relative paths in a remote context are treated as remote [Jeroen van Dijk]
+- Start using RSpec 2 [Fred Wu]
+- Stay compatible with Capybara master [Fred Wu]
+
+# Version 0.2.4 and older
+
+Initial work [Jeroen van Dijk]
