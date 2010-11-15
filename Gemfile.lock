@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    capybara-mechanize (0.2.3)
+    capybara-mechanize (0.2.4)
       capybara (~> 0.4.0)
       mechanize (~> 1.0.0)
 
@@ -76,4 +76,4 @@ DEPENDENCIES
   mongrel (~> 1.2.pre)
   rspec (~> 2.0.1)
   ruby-debug
-  sinatra
+  sinatra (= 1.0.0)
