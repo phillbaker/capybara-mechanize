@@ -26,4 +26,6 @@ end
 # Run the app with the following line: 
 # ruby -rrubygems lib/capybara/spec/extended_test_app.rb
 REMOTE_TEST_HOST = "capybara-testapp.heroku.com:8070"
-REMOTE_TEST_URL = "http://#{REMOTE_TEST_HOST}"
+LOCAL_TEST_HOST  = "localhost:8070"
+REMOTE_TEST_URL  = "http://#{REMOTE_TEST_HOST}"
+LOCAL_TEST_URL   = "http://#{LOCAL_TEST_HOST}"

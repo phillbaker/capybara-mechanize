@@ -38,6 +38,13 @@ describe Capybara::Session do
       @session.click_button "submit"
       @session.body.should == "current host is #{REMOTE_TEST_HOST}, method post"      
     end
+    
+    it "should redirect to localhost request when submitting a form with button type='button'" do
+      pending "failed spec because of https://github.com/jnicklas/capybara/issues/issue/199"
+      @session.visit("#{REMOTE_TEST_URL}/form_with_absolute_get_action_to_localhost")
+      @session.click_button "OK"
+      @session.body.should == "current host is #{LOCAL_TEST_URL}, method get"      
+    end
 
     it_should_behave_like "session"
     it_should_behave_like "session without javascript support"
