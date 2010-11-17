@@ -1,13 +1,14 @@
 PATH
   remote: .
   specs:
-    capybara-mechanize (0.2.4)
+    capybara-mechanize (0.2.5)
       capybara (~> 0.4.0)
       mechanize (~> 1.0.0)
 
 GEM
   remote: http://rubygems.org/
   specs:
+    archive-tar-minitar (0.5.2)
     capybara (0.4.0)
       celerity (>= 0.7.9)
       culerity (>= 0.2.4)
@@ -29,6 +30,8 @@ GEM
     gem_plugin (0.2.3)
     json_pure (1.4.6)
     linecache (0.43)
+    linecache19 (0.5.11)
+      ruby_core_source (>= 0.1.4)
     mechanize (1.0.0)
       nokogiri (>= 1.2.1)
     mime-types (1.16)
@@ -55,6 +58,16 @@ GEM
       ruby-debug-base (~> 0.10.3.0)
     ruby-debug-base (0.10.3)
       linecache (>= 0.3)
+    ruby-debug-base19 (0.11.24)
+      columnize (>= 0.3.1)
+      linecache19 (>= 0.5.11)
+      ruby_core_source (>= 0.1.4)
+    ruby-debug19 (0.11.6)
+      columnize (>= 0.3.1)
+      linecache19 (>= 0.5.11)
+      ruby-debug-base19 (>= 0.11.19)
+    ruby_core_source (0.1.4)
+      archive-tar-minitar (>= 0.5.2)
     rubyzip (0.9.4)
     selenium-webdriver (0.0.29)
       childprocess (>= 0.0.7)
@@ -76,4 +89,5 @@ DEPENDENCIES
   mongrel (~> 1.2.pre)
   rspec (~> 2.0.1)
   ruby-debug
+  ruby-debug19
   sinatra (= 1.0.0)
