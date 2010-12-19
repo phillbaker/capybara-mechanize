@@ -57,10 +57,28 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
 
   def post(url, params = {}, headers = {})
     if remote?(url)
-      process_remote_request(:post, url, params, headers)
+      process_remote_request(:post, url, post_data(params), headers)
     else
       register_local_request
       super
+    end
+  end
+
+  def post_data(params)
+    params.inject({}) do |memo, param|
+      case param
+      when Hash
+        param.each {|attribute, value| memo[attribute] = value }
+        memo
+      when Array
+        case param.last
+        when Hash
+          param.last.each {|attribute, value| memo["#{param.first}[#{attribute}]"] = value }
+        else
+          memo[param.first] = param.last
+        end
+        memo
+      end
     end
   end
   

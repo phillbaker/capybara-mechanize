@@ -25,6 +25,20 @@ describe Capybara::Driver::Mechanize do
       @driver.body.should == %{<pre id="results">--- success\n</pre>}
     end
 
+    it "should pass arguments through to a post request" do
+      @driver.post("#{REMOTE_TEST_URL}/form", {:form => "success"})
+      @driver.body.should == %{<pre id="results">--- success\n</pre>}
+    end
+
+    context "for a post request" do
+
+      it "should transform nested map in post data" do
+        @driver.post("#{REMOTE_TEST_URL}/form", {:form => {:key => "value"}})
+        @driver.body.should == %{<pre id="results">--- \nkey: value\n</pre>}
+      end
+
+    end
+
     it_should_behave_like "driver"
     it_should_behave_like "driver with header support"
     it_should_behave_like "driver with status code support"
