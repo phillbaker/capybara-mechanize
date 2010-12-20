@@ -20,6 +20,8 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   
   def reset!
     @agent.cookie_jar.clear!
+    @last_remote_host = nil
+    @last_request_remote = nil
     super
   end
   
