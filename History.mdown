@@ -1,3 +1,9 @@
+# Version 0.2.6
+Release date: 12-01-2011
+
+- Manage nested map in Driver#post method to create post data [Alban Peignier]
+- add ruby19 support for gemfile [petrushka]
+
 # Version 0.2.5
 Release date: 15-11-2010
 
