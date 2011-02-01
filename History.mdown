@@ -1,3 +1,8 @@
+# Version 0.2.7
+Release date: 01-02-2011
+
+- Capybara::Driver::Mechanize#reset! needs to reset last_remote_host and last_request_remote state between sessions. [Joel Chippindale and Jon Gilbraith]
+
 # Version 0.2.6
 Release date: 12-01-2011
 
