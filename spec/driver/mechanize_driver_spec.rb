@@ -105,6 +105,20 @@ describe "Capybara::Driver::Mechanize, in local model" do
     should_be_a_local_get
   end
 
+  describe '#reset!' do
+    before :each do
+      Capybara.default_host = 'www.local.com'
+    end
+
+    it 'should reset remote host' do
+      @driver.visit("#{REMOTE_TEST_URL}/host")
+      should_be_a_remote_get
+      @driver.reset!
+      @driver.visit("/host")
+      should_be_a_local_get
+    end
+  end
+
   def should_be_a_remote_get
     @driver.body.should == "current host is #{REMOTE_TEST_HOST}, method get"
   end
