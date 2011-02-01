@@ -35,7 +35,7 @@ describe Capybara::Session do
       end
     end
 
-    # Pending: Still 18 failing tests here (result is 705 examples, 18 failures, instead of 384 examples)
+    # Pending: Still 16 failing tests here (result is 706 examples, 16 failures, instead of 385 examples)
     # it_should_behave_like "session"
 
     it_should_behave_like "session without javascript support"
