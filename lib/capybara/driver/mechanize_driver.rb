@@ -144,8 +144,13 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       end
       
       reset_cache
-      @agent.send *( [method, url] + options)
-        
+      #In order to appropriately capture pages from which mechanize throws an exception
+      begin
+        @agent.send *( [method, url] + options)
+      rescue Exception => e
+        @agent.history.push(e.page)
+      end        
+
       @last_request_remote = true
     end
   end
