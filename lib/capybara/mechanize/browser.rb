@@ -25,20 +25,20 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     last_request_remote? ? remote_response.current_url : super
   end
   
-  def response
+  def last_response
     last_request_remote? ? remote_response : super
   end
   
   # TODO see how this can be cleaned up
   def follow_redirect!
-    unless response.redirect?
+    unless last_response.redirect?
       raise "Last response was not a redirect. Cannot follow_redirect!"
     end
   
     location = if last_request_remote?
         remote_response.page.response['Location'] 
       else
-        response['Location']
+        last_response['Location']
       end
     
     get(location)
@@ -109,7 +109,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       if host.nil? && last_request_remote?
         true
       else
-        !(host.nil? || host.include?(Capybara.default_host))
+        !(host.nil? || Capybara.default_host.include?(host))
       end
     end
   end

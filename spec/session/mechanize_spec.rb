@@ -4,7 +4,7 @@ describe Capybara::Session do
   context 'with mechanize driver' do
     before do
       @session = Capybara::Session.new(:mechanize, TestApp)
-      Capybara.default_host = "www.local.com"
+      Capybara.default_host = 'http://www.local.com'
     end
 
     describe '#driver' do
