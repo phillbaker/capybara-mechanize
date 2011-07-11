@@ -130,9 +130,5 @@ describe "Capybara::Driver::Mechanize, in local model" do
   def should_be_a_local_get
     @driver.body.should == body_with_expected_host("www.local.com:80")
   end
-  
-  def body_with_expected_host(expected_host)
-    %{<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n<html><body><p>current host is #{expected_host}, method get</p></body></html>\n}
-  end
 
 end

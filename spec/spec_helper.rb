@@ -14,7 +14,23 @@ alias :running :lambda
 
 Capybara.default_wait_time = 0 # less timeout so tests run faster
 
+module TestHelpers
+  def body_with_content(body)
+    %{<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n<html><body>#{body}</body></html>\n}
+  end
+  
+  def body_with_paragraph(content)
+    body_with_content "<p>#{content}</p>"
+  end
+  
+  def body_with_expected_host(expected_host)
+    body_with_paragraph "current host is #{expected_host}, method get"
+  end
+end
+
 RSpec.configure do |config|
+  config.include TestHelpers
+
   config.after do
     Capybara.default_selector = :xpath
   end

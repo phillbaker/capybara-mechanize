@@ -26,7 +26,7 @@ describe Capybara::Mechanize::Driver do
       @driver.visit("#{REMOTE_TEST_URL}/form/get", {:form => "success"})
       
       if ruby_19?
-        @driver.body.should == %{<pre id=\"results\">--- success\n...\n</pre>}
+        @driver.body.should == body_with_content(%{<pre id=\"results\">--- success\n...\n</pre>})
       else
         @driver.body.should == %{<pre id="results">--- success\n</pre>}
       end
@@ -35,7 +35,7 @@ describe Capybara::Mechanize::Driver do
     it "should pass arguments through to a post request" do
       @driver.post("#{REMOTE_TEST_URL}/form", {:form => "success"})
       if ruby_19?
-        @driver.body.should == %{<pre id=\"results\">--- success\n...\n</pre>}
+        @driver.body.should == body_with_content(%{<pre id=\"results\">--- success\n...\n</pre>})
       else
         @driver.body.should == %{<pre id=\"results\">--- success\n</pre>}
       end
@@ -46,7 +46,7 @@ describe Capybara::Mechanize::Driver do
       it "should transform nested map in post data" do
         @driver.post("#{REMOTE_TEST_URL}/form", {:form => {:key => "value"}})
         if ruby_19?
-          @driver.body.should == %{<pre id=\"results">---\nkey: value\n<\/pre>}
+          @driver.body.should == body_with_content(%{<pre id=\"results">---\nkey: value\n<\/pre>})
         else
           @driver.body.should == %{<pre id="results">--- \nkey: value\n</pre>}
         end
