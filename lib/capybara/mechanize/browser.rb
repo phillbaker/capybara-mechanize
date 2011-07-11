@@ -7,19 +7,14 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   def_delegator :agent, :scheme_handlers
   def_delegator :agent, :scheme_handlers=
   
-  def initialize(app = nil)
+  def initialize(app = nil, options)
     @agent = ::Mechanize.new
     @agent.redirect_ok = false
     
-    if app
-     # Delegate the RackApp to the RackTest driver
-     super(app)
-    elsif !Capybara.app_host
-      raise ArgumentError, "You have to set at least Capybara.app_host or Capybara.app"
-    end
+    super
   end
   
-  def reset!
+  def reset_cache!
     @agent.cookie_jar.clear!
     @last_remote_host = nil
     @last_request_remote = nil
@@ -144,7 +139,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
         @last_remote_host = "#{remote_uri.host}:#{remote_uri.port}"
       end
       
-      reset_cache
+      reset_cache!
       @agent.send *( [method, url] + options)
         
       @last_request_remote = true
