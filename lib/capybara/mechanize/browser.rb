@@ -1,6 +1,7 @@
+require 'capybara/rack_test/driver'
 require 'mechanize'
 
-class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
+class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   extend Forwardable
   
   def_delegator :agent, :scheme_handlers
@@ -38,7 +39,7 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
     unless response.redirect?
       raise "Last response was not a redirect. Cannot follow_redirect!"
     end
-
+  
     location = if last_request_remote?
         remote_response.page.response['Location'] 
       else
@@ -56,7 +57,7 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       super
     end
   end
-
+  
   def post(url, params = {}, headers = {})
     if remote?(url)
       process_remote_request(:post, url, post_data(params), headers)
@@ -65,7 +66,7 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       super
     end
   end
-
+  
   def post_data(params)
     params.inject({}) do |memo, param|
       case param
@@ -92,7 +93,7 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       super
     end
   end
-
+  
   def delete(url, params = {}, headers = {})
     if remote?(url)
       process_remote_request(:delete, url, params, headers)
@@ -101,7 +102,7 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       super
     end
   end
-
+  
   def remote?(url)
     if !Capybara.app_host.nil? 
       true
@@ -117,9 +118,9 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       end
     end
   end
-
+  
   attr_reader :agent
-
+  
   private
   
   def last_request_remote?
@@ -130,11 +131,11 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
     @last_remote_host = nil
     @last_request_remote = false
   end
-
+  
   def process_remote_request(method, url, *options)
     if remote?(url)
       remote_uri = URI.parse(url)
-
+  
       if remote_uri.host.nil?
         remote_host = @last_remote_host || Capybara.app_host || Capybara.default_host
         url = File.join(remote_host, url)
@@ -149,7 +150,7 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       @last_request_remote = true
     end
   end
-
+  
   def remote_response
     ResponseProxy.new(@agent.current_page) if @agent.current_page
   end
@@ -175,11 +176,11 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
       headers["content-type"].gsub!(';charset=utf-8', '') if headers["content-type"]
       headers
     end
-
+  
     def status
       page.code.to_i
     end    
-
+  
     def redirect?
       [301, 302].include?(status)
     end
@@ -187,3 +188,4 @@ class Capybara::Driver::Mechanize < Capybara::Driver::RackTest
   end 
    
 end
+

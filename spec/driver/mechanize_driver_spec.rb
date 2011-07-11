@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe "Capybara::Driver::Mechanize, in local model" do
   before do
-    @driver = Capybara::Driver::Mechanize.new(ExtendedTestApp)
+    @driver = Capybara::Mechanize::Driver.new(ExtendedTestApp)
   end
   
   it "should throw an error when no rack app is given without an app host" do
     running do
-      Capybara::Driver::Mechanize.new
+      Capybara::Mechanize::Driver.new
     end.should raise_error(ArgumentError, "You have to set at least Capybara.app_host or Capybara.app")
   end
   

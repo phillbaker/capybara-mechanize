@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Capybara::Driver::Mechanize do
+describe Capybara::Mechanize::Driver do
   let(:ruby_19?) { ENV['RUBY_VERSION'] =~ /ruby-1.9/ }
 
   before(:each) do
@@ -12,13 +12,13 @@ describe Capybara::Driver::Mechanize do
   end
 
   before do
-    @driver = Capybara::Driver::Mechanize.new
+    @driver = Capybara::Mechanize::Driver.new
   end
   
   context "in remote mode" do
     it "should not throw an error when no rack app is given" do
       running do
-        Capybara::Driver::Mechanize.new
+        Capybara::Mechanize::Driver.new
       end.should_not raise_error(ArgumentError)
     end
     

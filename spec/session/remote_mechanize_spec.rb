@@ -17,7 +17,7 @@ describe Capybara::Session do
 
     describe '#driver' do
       it "should be a mechanize driver" do
-        @session.driver.should be_an_instance_of(Capybara::Driver::Mechanize)
+        @session.driver.should be_an_instance_of(Capybara::Mechanize::Driver)
       end
     end
 

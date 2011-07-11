@@ -1,11 +1,10 @@
 require 'capybara'
 
-module Capybara
-  module Driver
-    autoload :Mechanize, 'capybara/driver/mechanize_driver'
-  end
+module Capybara::Mechanize
 end
 
+require 'capybara/mechanize/driver'
+
 Capybara.register_driver :mechanize do |app|
-  Capybara::Driver::Mechanize.new(app)
+  Capybara::Mechanize::Driver.new(app)
 end
