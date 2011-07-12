@@ -33,6 +33,13 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     last_request_remote? ? remote_response : super
   end
   
+  def follow_redirects!
+    5.times do
+      follow_redirect! if last_response.redirect?
+    end
+    raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect?
+  end
+  
   # TODO see how this can be cleaned up
   def follow_redirect!
     unless last_response.redirect?
@@ -48,57 +55,64 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     get(location)
   end
   
-  def get(url, params = {}, headers = {})
-    if remote?(url)
-      process_remote_request(:get, url, params)
-      follow_redirects!
-    else
-      register_local_request
-      super
-    end
+  
+  def process(method, path, attributes = {}, headers = {})
+    process_without_redirect(method, path, attributes, headers)
+    follow_redirects!
   end
   
-  def visit(url, params = {})
-    if remote?(url)
-      process_remote_request(:get, url, params)
-      follow_redirects!
-    else
-      register_local_request
-      super
-    end
-  end
-  
-  def submit(method, path, attributes)
-    path = request_path if not path or path.empty?
+  def process_without_redirect(method, path, attributes = {}, headers = {})
     if remote?(path)
       process_remote_request(method, path, attributes)
-      follow_redirects!
     else
       register_local_request
-      super
+      
+      path = determine_path(path)
+      
+      reset_cache!
+      send("racktest_#{method}", path, attributes, env.merge(headers))
     end
-  end
-
-  def follow(method, path, attributes = {})
-    return if path.gsub(/^#{request_path}/, '').start_with?('#')
-
-    if remote?(path)
-      process_remote_request(method, path, attributes)
-      follow_redirects!
-    else
-      register_local_request
-      super
-    end
-
   end
   
-  def post(url, params = {}, headers = {})
-    if remote?(url)
-      process_remote_request(:post, url, post_data(params), headers)
-    else
-      register_local_request
-      super
+  # TODO path Capybara to move this into its own method
+  def determine_path(path)
+    new_uri = URI.parse(path)
+    current_uri = URI.parse(current_url)
+
+    if new_uri.host
+      @current_host = new_uri.scheme + '://' + new_uri.host
     end
+  
+    if new_uri.relative?
+      path = request_path + path if path.start_with?('?')
+    
+      unless path.start_with?('/')
+        folders = request_path.split('/')
+        path = (folders[0, folders.size - 1] << path).join('/')
+      end
+      path = current_host + path
+    end
+    path
+  end
+
+  alias :racktest_get :get
+  def get(path, attributes = {}, headers = {})
+    process_without_redirect(:get, path, attributes)
+  end
+
+  alias :racktest_post :post
+  def post(path, attributes = {}, headers = {})
+    process_without_redirect(:post, path, post_data(attributes))
+  end
+  
+  alias :racktest_put :put
+  def put(method, path, attributes = {}, headers = {})
+    process_without_redirect(:put, path, attributes)
+  end
+  
+  alias :racktest_delete :delete
+  def delete(method, path, attributes = {}, headers = {})
+    process_without_redirect(:delete, path, attributes)
   end
   
   def post_data(params)
@@ -116,24 +130,6 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
         end
         memo
       end
-    end
-  end
-  
-  def put(url, params = {}, headers = {})
-    if remote?(url)
-      process_remote_request(:put, url)
-    else
-      register_local_request
-      super
-    end
-  end
-  
-  def delete(url, params = {}, headers = {})
-    if remote?(url)
-      process_remote_request(:delete, url, params, headers)
-    else
-      register_local_request
-      super
     end
   end
   
