@@ -7,10 +7,10 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   def_delegator :agent, :scheme_handlers
   def_delegator :agent, :scheme_handlers=
   
-  def initialize(app = nil, options)
+  def initialize(app, options)
     @agent = ::Mechanize.new
     @agent.redirect_ok = false
-    
+
     super
   end
   
