@@ -14,11 +14,6 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     super
   end
   
-  def reset_cache!
-    @agent.cookie_jar.clear!
-    super
-  end
-  
   def reset_host!
     @last_remote_host = nil
     @last_request_remote = nil
@@ -56,18 +51,24 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
   
   
-  def process(method, path, attributes = {}, headers = {})
-    process_without_redirect(method, path, attributes, headers)
+  def process(method, path, *options)
+    reset_cache!
+    process_without_redirect(method, path, *options)
     follow_redirects!
   end
   
-  def process_without_redirect(method, path, attributes = {}, headers = {})
+  def process_without_redirect(method, path, *options)
     if remote?(path)
-      process_remote_request(method, path, attributes)
+      process_remote_request(method, path, *options)
     else
       register_local_request
       
+      
       path = determine_path(path)
+      
+      attributes, headers = *options
+      attributes ||= {}
+      headers ||= {}
       
       reset_cache!
       send("racktest_#{method}", path, attributes, env.merge(headers))
@@ -96,23 +97,23 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
 
   alias :racktest_get :get
-  def get(path, attributes = {}, headers = {})
+  def get(path, attributes = {})
     process_without_redirect(:get, path, attributes)
   end
 
   alias :racktest_post :post
   def post(path, attributes = {}, headers = {})
-    process_without_redirect(:post, path, post_data(attributes))
+    process_without_redirect(:post, path, post_data(attributes), headers)
   end
   
   alias :racktest_put :put
   def put(method, path, attributes = {}, headers = {})
-    process_without_redirect(:put, path, attributes)
+    process_without_redirect(:put, path, attributes, headers)
   end
   
   alias :racktest_delete :delete
   def delete(method, path, attributes = {}, headers = {})
-    process_without_redirect(:delete, path, attributes)
+    process_without_redirect(:delete, path, attributes, headers)
   end
   
   def post_data(params)
@@ -176,7 +177,6 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       
       reset_cache!
       @agent.send *( [method, url] + options)
-        
       @last_request_remote = true
     end
   end
