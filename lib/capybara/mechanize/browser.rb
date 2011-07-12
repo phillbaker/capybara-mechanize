@@ -16,6 +16,10 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   
   def reset_cache!
     @agent.cookie_jar.clear!
+    super
+  end
+  
+  def reset_host!
     @last_remote_host = nil
     @last_request_remote = nil
     super
@@ -47,6 +51,17 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   def get(url, params = {}, headers = {})
     if remote?(url)
       process_remote_request(:get, url, params)
+      follow_redirects!
+    else
+      register_local_request
+      super
+    end
+  end
+  
+  def visit(url, params = {})
+    if remote?(url)
+      process_remote_request(:get, url, params)
+      follow_redirects!
     else
       register_local_request
       super
