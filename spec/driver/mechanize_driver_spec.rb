@@ -68,7 +68,7 @@ describe "Capybara::Driver::Mechanize, in local model" do
       should_be_a_local_get
     end
 
-    it "should consider relative paths to be local when the previous request was local" do#, :focus => true do
+    it "should consider relative paths to be local when the previous request was local" do
       @driver.visit('http://www.local.com/host')
       @driver.visit('/host')
 
@@ -76,9 +76,9 @@ describe "Capybara::Driver::Mechanize, in local model" do
       @driver.should_not be_remote('/first_local')
     end
     
-    it "should consider relative paths to be remote when the previous request was remote" do#, :focus => true do
+    it "should consider relative paths to be remote when the previous request was remote", :focus => true do
       @driver.visit("#{REMOTE_TEST_URL}/host")
-      @driver.visit('/host')
+      @driver.get('/host')
 
       should_be_a_remote_get
       @driver.should be_remote('/second_remote')
@@ -86,10 +86,10 @@ describe "Capybara::Driver::Mechanize, in local model" do
     
     it "should always switch to the right context" do#, :focus => true do
       @driver.visit('http://www.local.com/host')
-      @driver.visit('/host')
-      @driver.visit("#{REMOTE_TEST_URL}/host")
-      @driver.visit('/host')
-      @driver.visit('http://www.local.com/host')
+      @driver.get('/host')
+      @driver.get("#{REMOTE_TEST_URL}/host")
+      @driver.get('/host')
+      @driver.get('http://www.local.com/host')
 
       should_be_a_local_get
       @driver.should_not be_remote('/second_local')
