@@ -26,8 +26,3 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
   end
 end
 
-if __FILE__ == $0
-  Rack::Handler::Mongrel.run ExtendedTestApp, :Port => 80
-end
-
-
