@@ -23,4 +23,8 @@ end
 
 # Until this library is merged with capybara there needs to be a local app and you need to add
 # Install pow (get.pow.cx) and run add a symlink in ~/.pow with ln -s lib/capybara/spec capybara-testapp.heroku
-REMOTE_TEST_URL = "http://capybara-testapp.heroku.dev:80"
+if ENV['HOME'] =~ /jvandijk/ # TODO don't tie it to my personal stuff :)
+  REMOTE_TEST_URL = "http://capybara-testapp.heroku.dev:80"
+else
+  REMOTE_TEST_URL = "http://capybara-mechanize-testapp.herokuapp.com:80"
+end
