@@ -130,11 +130,11 @@ describe "Capybara::Driver::Mechanize, in local model" do
   end
 
   def should_be_a_remote_get
-    @driver.body.should == body_with_expected_host(REMOTE_TEST_HOST)
+    @driver.body.should include(REMOTE_TEST_URL)
   end
   
   def should_be_a_local_get
-    @driver.body.should == body_with_expected_host("www.local.com:80")
+    @driver.body.should include("www.local.com")
   end
 
 end

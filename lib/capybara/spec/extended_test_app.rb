@@ -8,7 +8,7 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
   end
   
   get '/host' do
-    "current host is #{request.host}:#{request.port}, method get"
+    "Current host is #{request.scheme}://#{request.host}:#{request.port}, method get"
   end
   
   get '/form_with_relative_action_to_host' do
@@ -22,12 +22,12 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
   end
   
   post '/host' do
-    "current host is #{request.host}:#{request.port}, method post"
+    "Current host is #{request.scheme}://#{request.host}:#{request.port}, method post"
   end
 end
 
 if __FILE__ == $0
-  Rack::Handler::Mongrel.run ExtendedTestApp, :Port => 8070
+  Rack::Handler::Mongrel.run ExtendedTestApp, :Port => 80
 end
 
 
