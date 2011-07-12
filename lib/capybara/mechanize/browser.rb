@@ -68,6 +68,30 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     end
   end
   
+  def submit(method, path, attributes)
+    path = request_path if not path or path.empty?
+    if remote?(path)
+      process_remote_request(method, path, attributes)
+      follow_redirects!
+    else
+      register_local_request
+      super
+    end
+  end
+
+  def follow(method, path, attributes = {})
+    return if path.gsub(/^#{request_path}/, '').start_with?('#')
+
+    if remote?(path)
+      process_remote_request(method, path, attributes)
+      follow_redirects!
+    else
+      register_local_request
+      super
+    end
+
+  end
+  
   def post(url, params = {}, headers = {})
     if remote?(url)
       process_remote_request(:post, url, post_data(params), headers)
