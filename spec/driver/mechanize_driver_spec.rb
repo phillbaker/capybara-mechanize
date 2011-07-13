@@ -113,6 +113,12 @@ describe "Capybara::Driver::Mechanize, in local model" do
     after :each do
       Capybara.default_host = nil
     end
+    
+    it "should raise a useful error for sites that return a 404, because it is probably a misconfiguration", :focus => true do
+      lambda { 
+        @driver.visit("http://iamreallysurethatthisdoesntexist.com/canttouchthis")
+      }.should raise_error("Received the following error for a GET request to http://iamreallysurethatthisdoesntexist.com/canttouchthis: 'getaddrinfo: nodename nor servname provided, or not known'")
+    end
   end
 
   it "should include the right host when remote" do

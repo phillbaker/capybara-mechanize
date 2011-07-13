@@ -174,7 +174,11 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       end
       
       reset_cache!
-      @agent.send *( [method, url] + options)
+      begin
+        @agent.send *( [method, url] + options)
+      rescue => e
+        raise "Received the following error for a #{method.to_s.upcase} request to #{url}: '#{e.message}'"
+      end
       @last_request_remote = true
     end
   end
