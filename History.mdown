@@ -1,3 +1,10 @@
+# Version 0.3.0.rc1
+Release date: 13-07-2011
+
+- Have a more useful message when Mechanize errors out during a remote request [Jeroen van Dijk]
+- Add concept of Capybara::Mechanize.local_hosts to indicate what can be used as localhost [Jeroen van Dijk]
+- Capybara dependency upgraded 1.0.0. A significant change in how everything is organized internally [Jeroen van Dijk]
+
 # Version 0.2.7
 Release date: 01-02-2011
 

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    capybara-mechanize (0.2.7)
+    capybara-mechanize (0.3.0.rc1)
       capybara (~> 1.0.0)
       mechanize (~> 1.0.0)
 
