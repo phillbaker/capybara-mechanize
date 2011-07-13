@@ -17,6 +17,7 @@ Capybara.default_wait_time = 0 # less timeout so tests run faster
 RSpec.configure do |config|
   config.after do
     Capybara.default_selector = :xpath
+    Capybara::Mechanize.local_hosts = nil
   end
   # config.filter_run :focus => true
 end

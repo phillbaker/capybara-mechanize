@@ -42,7 +42,12 @@ describe "Capybara::Driver::Mechanize, in local model" do
 
   context "with a default url, no app host" do
     before :each do
-      Capybara.default_host = 'http://www.local.com'
+      Capybara.default_host = 'www.local.com'
+    end
+    
+    it "should allow local hosts to be set" do
+      Capybara::Mechanize.local_hosts = ['subdomain.local.com']
+      @driver.should_not be_remote('http://subdomain.local.com')
     end
   
     it "should treat urls with the same host names as local" do

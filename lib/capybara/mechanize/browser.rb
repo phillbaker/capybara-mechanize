@@ -135,17 +135,15 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
   
   def remote?(url)
-    if !Capybara.app_host.nil? 
+    if Capybara.app_host
       true
-    elsif Capybara.default_host.nil?
-      false
     else
       host = URI.parse(url).host
       
-      if host.nil? && last_request_remote?
-        true
+      if host.nil?
+        last_request_remote?
       else
-        !(host.nil? || Capybara.default_host.include?(host))
+        !Capybara::Mechanize.local_hosts.include?(host)
       end
     end
   end
