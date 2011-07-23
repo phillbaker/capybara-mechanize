@@ -214,7 +214,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     end    
   
     def redirect?
-      [301, 302].include?(status)
+      status >= 300 && status < 400
     end
     
   end 
