@@ -97,8 +97,8 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
 
   alias :racktest_get :get
-  def get(path, attributes = {})
-    process_without_redirect(:get, path, attributes)
+  def get(path, attributes = {}, headers = {})
+    process_without_redirect(:get, path, attributes, headers)
   end
 
   alias :racktest_post :post
