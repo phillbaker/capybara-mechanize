@@ -1,8 +1,10 @@
 # -*- encoding: utf-8 -*-
+$:.push File.expand_path("../lib", __FILE__)
+require "capybara/mechanize/version"
 
 Gem::Specification.new do |s|
   s.name = %q{capybara-mechanize}
-  s.version = File.read("VERSION")
+  s.version = Capybara::Mechanize::VERSION
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeroen van Dijk"]
