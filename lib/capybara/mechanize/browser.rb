@@ -107,12 +107,12 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
   
   alias :racktest_put :put
-  def put(method, path, attributes = {}, headers = {})
+  def put(path, attributes = {}, headers = {})
     process_without_redirect(:put, path, attributes, headers)
   end
   
   alias :racktest_delete :delete
-  def delete(method, path, attributes = {}, headers = {})
+  def delete(path, attributes = {}, headers = {})
     process_without_redirect(:delete, path, attributes, headers)
   end
   
