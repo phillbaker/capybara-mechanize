@@ -117,7 +117,7 @@ describe "Capybara::Driver::Mechanize, in local model" do
     it "should raise a useful error for sites that return a 404, because it is probably a misconfiguration", :focus => true do
       lambda { 
         @driver.visit("http://iamreallysurethatthisdoesntexist.com/canttouchthis")
-      }.should raise_error("Received the following error for a GET request to http://iamreallysurethatthisdoesntexist.com/canttouchthis: 'getaddrinfo: nodename nor servname provided, or not known'")
+      }.should raise_error(%r{Received the following error for a GET request to http://iamreallysurethatthisdoesntexist.com/canttouchthis:})
     end
   end
 

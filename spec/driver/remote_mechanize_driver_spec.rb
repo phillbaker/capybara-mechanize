@@ -39,6 +39,15 @@ describe Capybara::Mechanize::Driver do
 
     end
 
+    context "process remote request" do
+
+      it "should transform nested map in post data" do
+        @driver.submit(:post, "#{REMOTE_TEST_URL}/form", {:form => {:key => "value"}})
+        @driver.body.should include('key: value')
+      end
+
+    end
+
     it_should_behave_like "driver"
     it_should_behave_like "driver with header support"
     it_should_behave_like "driver with status code support"

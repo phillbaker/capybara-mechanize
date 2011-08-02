@@ -50,25 +50,19 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     get(location)
   end
   
-  
   def process(method, path, *options)
     reset_cache!
-    process_without_redirect(method, path, *options)
+    send(method, path, *options)
     follow_redirects!
   end
   
-  def process_without_redirect(method, path, *options)
+  def process_without_redirect(method, path, attributes, headers)
     if remote?(path)
-      process_remote_request(method, path, *options)
+      process_remote_request(method, path, attributes, headers)
     else
       register_local_request
       
-      
       path = determine_path(path)
-      
-      attributes, headers = *options
-      attributes ||= {}
-      headers ||= {}
       
       reset_cache!
       send("racktest_#{method}", path, attributes, env.merge(headers))
@@ -97,8 +91,8 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
 
   alias :racktest_get :get
-  def get(path, attributes = {})
-    process_without_redirect(:get, path, attributes)
+  def get(path, attributes = {}, headers = {})
+    process_without_redirect(:get, path, attributes, headers)
   end
 
   alias :racktest_post :post
@@ -107,12 +101,12 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
   
   alias :racktest_put :put
-  def put(method, path, attributes = {}, headers = {})
+  def put(path, attributes = {}, headers = {})
     process_without_redirect(:put, path, attributes, headers)
   end
   
   alias :racktest_delete :delete
-  def delete(method, path, attributes = {}, headers = {})
+  def delete(path, attributes = {}, headers = {})
     process_without_redirect(:delete, path, attributes, headers)
   end
   
@@ -161,7 +155,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     @last_request_remote = false
   end
   
-  def process_remote_request(method, url, *options)
+  def process_remote_request(method, url, attributes, headers)
     if remote?(url)
       remote_uri = URI.parse(url)
   
@@ -175,7 +169,10 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       
       reset_cache!
       begin
-        @agent.send *( [method, url] + options)
+        args = []
+        args << attributes unless attributes.empty?
+        args << headers unless headers.empty?
+        @agent.send(method, url, *args)
       rescue => e
         raise "Received the following error for a #{method.to_s.upcase} request to #{url}: '#{e.message}'"
       end
