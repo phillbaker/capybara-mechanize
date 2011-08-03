@@ -35,19 +35,12 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect?
   end
   
-  # TODO see how this can be cleaned up
   def follow_redirect!
     unless last_response.redirect?
       raise "Last response was not a redirect. Cannot follow_redirect!"
     end
   
-    location = if last_request_remote?
-        remote_response.page.response['Location'] 
-      else
-        last_response['Location']
-      end
-    
-    get(location)
+    get(last_location_header)
   end
   
   def process(method, path, *options)
@@ -145,6 +138,10 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   attr_reader :agent
   
   private
+  
+  def last_location_header
+    last_request_remote? ? remote_response.page.response['Location'] : last_response['Location']
+  end
   
   def last_request_remote?
     !!@last_request_remote
