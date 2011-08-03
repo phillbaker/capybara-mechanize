@@ -30,13 +30,13 @@ describe Capybara::Session do
     it "should use the last remote url when following relative links" do
       @session.visit("#{REMOTE_TEST_URL}/relative_link_to_host")
       @session.click_link "host"
-      @session.body.should include("Current host is #{REMOTE_TEST_URL}, method get")
+      @session.body.should include("Current host is #{REMOTE_TEST_URL}/request_info/host, method get")
     end
     
     it "should use the last remote url when submitting a form with a relative action" do
       @session.visit("#{REMOTE_TEST_URL}/form_with_relative_action_to_host")
       @session.click_button "submit"
-      @session.body.should include("Current host is #{REMOTE_TEST_URL}, method post")
+      @session.body.should include("Current host is #{REMOTE_TEST_URL}/request_info/host, method post")
     end
 
     it_should_behave_like "session"

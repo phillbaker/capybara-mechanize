@@ -7,22 +7,35 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
     redirect params[:captures]
   end
   
-  get '/host' do
-    "Current host is #{request.scheme}://#{request.host}:#{request.port}, method get"
+  get '/form_with_relative_action_to_host' do
+    %{<form action="/request_info/host" method="post">
+       <input type="submit" value="submit" />
+      </form>}
   end
   
-  get '/form_with_relative_action_to_host' do
-    %{<form action="/host" method="post">
+  get '/request_info/form_with_no_action' do
+    %{<form method="post">
        <input type="submit" value="submit" />
       </form>}
   end
   
   get '/relative_link_to_host' do
-    %{<a href="/host">host</a>}
+    %{<a href="/request_info/host">host</a>}
   end
   
-  post '/host' do
-    "Current host is #{request.scheme}://#{request.host}:#{request.port}, method post"
+  get '/request_info/*' do
+    current_request_info
   end
+
+  post '/request_info/*' do
+    current_request_info
+  end
+
+  
+  private
+  
+    def current_request_info
+      "Current host is #{request.url}, method #{request.request_method.downcase}"
+    end
 end
 

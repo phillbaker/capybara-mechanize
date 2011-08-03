@@ -31,4 +31,4 @@ RSpec.configure do |config|
   # config.filter_run :focus => true
 end
 
-REMOTE_TEST_URL = "http://localhost:80"
+REMOTE_TEST_URL = "http://localhost"
