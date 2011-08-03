@@ -38,6 +38,12 @@ describe Capybara::Session do
       @session.click_button "submit"
       @session.body.should include("Current host is #{REMOTE_TEST_URL}/request_info/host, method post")
     end
+    
+    it "should use the last url when submitting a form with no action" do
+      @session.visit("#{REMOTE_TEST_URL}/request_info/form_with_no_action")
+      @session.click_button "submit"
+      @session.body.should include("Current host is #{REMOTE_TEST_URL}/request_info/form_with_no_action, method post")
+    end
 
     it_should_behave_like "session"
     it_should_behave_like "session without javascript support"

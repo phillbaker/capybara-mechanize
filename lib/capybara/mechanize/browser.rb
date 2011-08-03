@@ -50,6 +50,8 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
   
   def process_without_redirect(method, path, attributes, headers)
+    path = @last_path if path.nil? || path.empty?
+
     if remote?(path)
       process_remote_request(method, path, attributes, headers)
     else
@@ -60,6 +62,8 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       reset_cache!
       send("racktest_#{method}", path, attributes, env.merge(headers))
     end
+    
+    @last_path = path
   end
   
   # TODO path Capybara to move this into its own method
