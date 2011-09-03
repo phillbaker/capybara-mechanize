@@ -20,6 +20,6 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   
   s.add_runtime_dependency(%q<mechanize>, ["~> 2.0.0"])
-  s.add_runtime_dependency(%q<capybara>, ["~> 1.0.0"])
+  s.add_runtime_dependency(%q<capybara>, ["~> 1.1.0"])
 end
 
