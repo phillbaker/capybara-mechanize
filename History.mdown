@@ -1,3 +1,13 @@
+# Version 0.3.0.rc2
+Release date: 9-09-2011
+
+- Upgrade to Capybara 1.1.0 [Ben Hollis]
+- Upgrade to Mechanize 2.0 [Ben Hollis]
+- [Fix #20] Send user agent with the request [Piotr Usewicz]
+- [FIX #19] Use current host for forms that have no action on it [Jeroen van Dijk]
+- [FIX #17] Remote POST requests do not handle form field hashes correctly [Adam Meehan]
+- Use artifice instead of any outside process and hosts file entry [Adam Meehan]
+
 # Version 0.3.0.rc1
 Release date: 13-07-2011
 
