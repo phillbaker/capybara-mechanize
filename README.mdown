@@ -39,21 +39,13 @@ Note that I haven't tested this case for my self yet. The Capybara tests pass fo
 
 ## Running tests
 
-Until this library is merged with capybara there needs to be local app and you need to add the following to your host file:
-
-    127.0.0.1 capybara-testapp.heroku.com 
-
 Run bundler
 
     bundle install
 
-Run the app with the following line: 
-
-    bundle exec ruby -rrubygems lib/capybara/spec/extended_test_app.rb
-
 Then you are ready to run the test like so
 
-    rake spec
+    bundle exec rake spec
 
 Todo
 ----
