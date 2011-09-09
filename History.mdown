@@ -1,4 +1,4 @@
-# Version 0.3.0.rc2
+# Version 0.3.0.rc3
 Release date: 9-09-2011
 
 - Upgrade to Capybara 1.1.0 [Ben Hollis]
@@ -8,7 +8,7 @@ Release date: 9-09-2011
 - [FIX #17] Remote POST requests do not handle form field hashes correctly [Adam Meehan]
 - Use artifice instead of any outside process and hosts file entry [Adam Meehan]
 
-# Version 0.3.0.rc1
+# Version 0.3.0.rc2
 Release date: 13-07-2011
 
 - Have a more useful message when Mechanize errors out during a remote request [Jeroen van Dijk]

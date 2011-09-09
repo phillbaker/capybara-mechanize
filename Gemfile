@@ -4,7 +4,7 @@ gemspec
 
 gem 'rspec', '~> 2.0.1'
 gem "sinatra", "1.0.0"
-gem "rake"
+gem "rake", "0.8.7"
 
 group :development do
   gem "ruby-debug",   :platforms => :ruby_18
