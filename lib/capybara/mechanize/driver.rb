@@ -15,7 +15,7 @@ class Capybara::Mechanize::Driver < Capybara::RackTest::Driver
   end
   
   def browser
-    @browser ||= Capybara::Mechanize::Browser.new(app, options)
+    @browser ||= Capybara::Mechanize::Browser.new(self)
   end
   
 end

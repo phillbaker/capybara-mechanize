@@ -7,7 +7,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   def_delegator :agent, :scheme_handlers
   def_delegator :agent, :scheme_handlers=
   
-  def initialize(app, options)
+  def initialize(driver)
     @agent = ::Mechanize.new
     @agent.redirect_ok = false
 
@@ -80,7 +80,11 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     
       unless path.start_with?('/')
         folders = request_path.split('/')
-        path = (folders[0, folders.size - 1] << path).join('/')
+        if folders.empty?
+          path = '/' + path
+        else
+          path = (folders[0, folders.size - 1] << path).join('/')
+        end
       end
       path = current_host + path
     end

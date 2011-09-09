@@ -13,6 +13,7 @@ describe Capybara::Session do
     
     before do      
       @session = Capybara::Session.new(:mechanize)
+      @session.driver.options[:respect_data_method] = true
     end
 
     describe '#driver' do
