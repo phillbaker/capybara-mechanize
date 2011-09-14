@@ -40,6 +40,13 @@ describe Capybara::Session do
       @session.body.should include("Current host is #{REMOTE_TEST_URL}/request_info/host, method post")
     end
 
+    it "should post fancy params correctly" do
+      @session.visit("#{REMOTE_TEST_URL}/form_with_fancy_params")
+      @session.click_button "submit"
+      params["cart"]["line_items"].should == [{"product_id" => "2"}]
+      @session.body.should include("first product id is 2")
+    end
+
     it "should use the last url when submitting a form with no action" do
       @session.visit("#{REMOTE_TEST_URL}/request_info/form_with_no_action")
       @session.click_button "submit"
