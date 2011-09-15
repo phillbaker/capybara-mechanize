@@ -48,6 +48,13 @@ describe Capybara::Mechanize::Driver do
 
     end
 
+    describe "redirect" do
+      it "should handle redirects with http-params" do
+        @driver.visit "#{REMOTE_TEST_URL}/redirect_with_http_param"
+        @driver.body.should include('correct redirect')
+      end
+    end
+
     it_should_behave_like "driver"
     it_should_behave_like "driver with header support"
     it_should_behave_like "driver with status code support"
