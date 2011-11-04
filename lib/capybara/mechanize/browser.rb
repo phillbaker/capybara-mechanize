@@ -98,6 +98,9 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
 
   alias :racktest_post :post
   def post(path, attributes = {}, headers = {})
+    puts "Posting data: "
+    puts post_data(attributes)
+
     process_without_redirect(:post, path, post_data(attributes), headers)
   end
 
@@ -111,18 +114,59 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     process_without_redirect(:delete, path, attributes, headers)
   end
 
-  def post_data(params)
-    params.inject({}) do |memo, param|
-      case param
-      when Hash
-        param.each {|attribute, value| memo[attribute] = value }
-        memo
-      when Array
-        case param.last
+  # Convert a deep hash of parameters recursively into a one-level
+  # hash in the style of Rails where nested hashes become long keys
+  # with secondary keys enclosed in square brackets.
+  #
+  # No attempt is make to prevent duplicate keys.  For example, if
+  # there is a toplevel key of 'a[b][c]' and also an identical
+  # expanded key, the value will be that of whichever was encountered
+  # last according to the order of iteration through the hash
+  # (i.e. unspecified).
+  #
+  # For example,
+  #
+  # {
+  #   'a' => 1,
+  #   'b' => {
+  #            'c' => 1,
+  #            'd' => { 'e' => 1, 'f' => 2 }
+  #          }
+  # }
+  #
+  # becomes
+  #
+  # {
+  #   'a' => 1,
+  #   'b[c]' => 1,
+  #   'b[d][e]' => 1,
+  #   'b[d][f]' => 2
+  # }
+  #
+  # @param [Hash] params a possibly deep hash of parameters (with no
+  # circular references).  Can also be an array of hashes in which
+  # case the hashes will be effectively merged prior to conversion.
+  #
+  # @param [Proc] make_key a procedure for making the expanded key
+  # given the key at this level
+  #
+  # @param [Hash] acc the hash with expanded keys
+  def post_data(params, make_key = proc {|k| k}, acc = {})
+    case params
+    when Array
+      params.each { |p| post_data(p, make_key, acc) }
+      acc
+    when Hash
+      params.inject(acc) do |memo, keyval|
+        key, val = keyval
+        
+        case val
         when Hash
-          param.last.each {|attribute, value| memo["#{param.first}[#{attribute}]"] = value }
+          post_data(val,
+                    proc { |k| make_key.call(key) + '[' + k + ']' },
+                    memo)
         else
-          memo[param.first] = param.last
+          memo[make_key.call(key)] = val
         end
         memo
       end
