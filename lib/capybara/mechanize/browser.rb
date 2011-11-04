@@ -167,7 +167,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       if remote_uri.host.nil?
         remote_host = @last_remote_host || Capybara.app_host || Capybara.default_host
         url = File.join(remote_host, url)
-        url = "http://#{url}" unless url.include?("http")
+        url = "http://#{url}" unless url =~ /^http:/
       else
         @last_remote_host = "#{remote_uri.host}:#{remote_uri.port}"
       end

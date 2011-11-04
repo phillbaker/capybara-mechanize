@@ -35,6 +35,13 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
     current_request_info
   end
 
+  get '/redirect_with_http_param' do
+    redirect '/redirect_target?foo=http'
+  end
+  
+  get '/redirect_target' do
+    %{correct redirect}
+  end
 
   private
 
