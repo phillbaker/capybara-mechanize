@@ -160,7 +160,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
         case val
         when Hash
           post_data(val,
-                    proc { |k| make_key.call(key) + '[' + k + ']' },
+                    proc { |k| "#{make_key.call(key)}[#{k}]" },
                     memo)
         else
           memo[make_key.call(key)] = val
