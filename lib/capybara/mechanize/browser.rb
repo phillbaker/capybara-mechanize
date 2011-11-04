@@ -98,9 +98,6 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
 
   alias :racktest_post :post
   def post(path, attributes = {}, headers = {})
-    puts "Posting data: "
-    puts post_data(attributes)
-
     process_without_redirect(:post, path, post_data(attributes), headers)
   end
 
