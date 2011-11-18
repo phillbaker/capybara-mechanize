@@ -18,4 +18,9 @@ class Capybara::Mechanize::Driver < Capybara::RackTest::Driver
     @browser ||= Capybara::Mechanize::Browser.new(self)
   end
   
+  def reset!
+    browser.agent.cookie_jar.clear!
+    browser.reset_host!
+  end
+
 end
