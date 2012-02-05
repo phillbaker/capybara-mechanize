@@ -35,6 +35,18 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
     current_request_info
   end
 
+  get '/subsite/relative_link_to_host' do
+    %{<a href="/subsite/request_info2/host">host</a>}
+  end
+
+  get '/subsite/local_link_to_host' do
+    %{<a href="request_info2/host">host</a>}
+  end
+
+  get '/subsite/request_info2/*' do
+    "subsite: " + current_request_info
+  end
+
 
   private
 
