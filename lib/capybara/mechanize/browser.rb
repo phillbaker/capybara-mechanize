@@ -15,7 +15,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
 
   def reset_host!
-    @last_remote_host = nil
+    @last_remote_uri = nil
     @last_request_remote = nil
     super
   end
@@ -156,21 +156,16 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
 
   def register_local_request
-    @last_remote_host = nil
+    @last_remote_uri = nil
     @last_request_remote = false
   end
 
   def process_remote_request(method, url, attributes, headers)
     if remote?(url)
-      remote_uri = URI.parse(url)
-
-      if remote_uri.host.nil?
-        remote_host = @last_remote_host || Capybara.app_host || Capybara.default_host
-        url = File.join(remote_host, url)
-        url = "http://#{url}" unless url.include?("http")
-      else
-        @last_remote_host = "#{remote_uri.host}:#{remote_uri.port}"
-      end
+      uri = URI.parse(url)
+      uri = resolve_relative_url(url) if uri.host.nil?
+      @last_remote_uri = uri
+      url = uri.to_s
 
       reset_cache!
       begin
@@ -184,6 +179,40 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       @last_request_remote = true
     end
   end
+
+  # paths are combined "intelligently" as close as they would be by the browser, but still interpreting
+  # routes from rails like "/user/login" as relative to a host including a possible subdirectory:
+  # eg: app_host = localhost/mysite/    url = /                 result = http://localhost/mysite/
+  # eg: app_host = localhost/mysite/    url = /home             result = http://localhost/mysite/home
+  # eg: app_host = localhost/mysite/    url = /user/login       result = http://localhost/mysite/user/login
+  # eg: app_host = localhost/mysite/    url = /mysite/login     result = http://localhost/mysite/login
+  #                                                               **** notice that 'mysite' is not repeated! *****
+  def resolve_relative_url(url)
+    if @last_remote_uri
+      base_uri = @last_remote_uri
+      path_prefix = ''
+    else
+      host = Capybara.app_host || Capybara.default_host
+      # do this in text so we don't get the host interpretted as the scheme.
+      host = "http://#{host}" unless host =~ %r{^https?://.*}
+      base_uri = URI.parse(host)
+      base_uri.path = '/' if base_uri.path.nil? || base_uri.path.empty?
+      if base_uri.path.length > 1
+        path_prefix = base_uri.path
+        path_prefix += '/' unless path_prefix.end_with?('/') || url.start_with?('/')
+
+        # if the prefix is already in the path, don't let it be there twice.
+        if url.start_with?(path_prefix)
+          path_prefix = ''
+        end
+      else
+        path_prefix = ''
+      end
+    end
+    uri = URI.parse(path_prefix + url)
+    result_uri = base_uri.merge uri
+  end
+
 
   def remote_response
     ResponseProxy.new(@agent.current_page) if @agent.current_page
