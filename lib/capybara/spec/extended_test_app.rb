@@ -35,6 +35,9 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
     current_request_info
   end
 
+  get '/host' do
+    "Current host is #{request.scheme}://#{request.host}:#{request.port}"
+  end
 
   private
 
