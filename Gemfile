@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gemspec
 
-gem 'rspec', '~> 2.0.1'
+gem 'rspec', '~> 2.9.0.rc2'
 gem "sinatra", "1.0.0"
 gem "rake", "0.8.7"
 
