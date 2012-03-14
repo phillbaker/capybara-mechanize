@@ -51,6 +51,14 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
     "subsite: " + current_request_info
   end
 
+  get '/redirect_with_http_param' do
+    redirect '/redirect_target?foo=http'
+  end
+  
+  get '/redirect_target' do
+    %{correct redirect}
+  end
+
   private
 
     def current_request_info

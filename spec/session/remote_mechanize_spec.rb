@@ -35,6 +35,8 @@ describe Capybara::Session do
         @session.body.should include('The requested object was deleted')
       end
     end
+    
+
 
     # Pending: Still 16 failing tests here (result is 706 examples, 16 failures, instead of 385 examples)
     # it_should_behave_like "session"
