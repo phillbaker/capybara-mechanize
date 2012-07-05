@@ -169,10 +169,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
 
       reset_cache!
       begin
-        args = []
-        args << attributes unless attributes.empty?
-        args << headers unless headers.empty?
-        @agent.send(method, url, *args)
+        @agent.send(method, url, attributes, headers)
       rescue => e
         raise "Received the following error for a #{method.to_s.upcase} request to #{url}: '#{e.message}'"
       end
