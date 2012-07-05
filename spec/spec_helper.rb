@@ -1,22 +1,12 @@
-require 'bundler/setup'
-require 'capybara'
-require 'capybara/dsl'
+require 'capybara/spec/spec_helper'
 require 'capybara/mechanize'
 require 'capybara/spec/extended_test_app'
 
-require 'sinatra'
+PROJECT_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..')).freeze
 
-# TODO move this stuff into capybara
-require 'capybara/spec/driver'
-require 'capybara/spec/session'
+$LOAD_PATH << File.join(PROJECT_ROOT, 'lib')
 
-alias :running :lambda
-
-Capybara.default_wait_time = 0 # less timeout so tests run faster
-Capybara.app = ExtendedTestApp
-
-rack_server = Capybara::Server.new(Capybara.app)
-rack_server.boot
+Dir[File.join(PROJECT_ROOT, 'spec', 'support', '**', '*.rb')].each { |file| require(file) }
 
 RSpec.configure do |config|
   # Spruce up the focus!
@@ -25,27 +15,11 @@ RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
 
   config.after do
-    Capybara.default_selector = :xpath
     Capybara::Mechanize.local_hosts = nil
   end
+
+  Capybara::SpecHelper.configure(config)
 end
 
-REMOTE_TEST_URL = "http://localhost:#{rack_server.port}"
-
-
-
-# for testing private methods, courtesy of
-# http://kailuowang.blogspot.com.au/2010/08/testing-private-methods-in-rspec.html
-def describe_internally *args, &block
-  example = describe *args, &block
-  klass = args[0]
-  if klass.is_a? Class
-    saved_private_instance_methods = klass.private_instance_methods
-    example.before do
-      klass.class_eval { public *saved_private_instance_methods }
-    end
-    example.after do
-      klass.class_eval { private *saved_private_instance_methods }
-    end
-  end
-end
+setup = ExtendedTestAppSetup.new.boot
+REMOTE_TEST_URL = setup.remote_test_url

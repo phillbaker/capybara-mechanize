@@ -2,12 +2,10 @@ require 'capybara/mechanize/browser'
 
 class Capybara::Mechanize::Driver < Capybara::RackTest::Driver
   
-  def initialize(app = nil, options = {})
-    if !app && !Capybara.app_host
-      raise ArgumentError, "You have to set at least Capybara.app_host or Capybara.app"
-    end
+  def initialize(app, options = {})
+    raise ArgumentError, "mechanize requires a rack application, but none was given" unless app
 
-    @app, @options = app, options
+    super
   end
 
   def remote?(url)
