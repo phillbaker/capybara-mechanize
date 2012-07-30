@@ -19,11 +19,15 @@ rack_server = Capybara::Server.new(Capybara.app)
 rack_server.boot
 
 RSpec.configure do |config|
+  # Spruce up the focus!
+  config.filter_run :focus => true
+  config.run_all_when_everything_filtered = true
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+
   config.after do
     Capybara.default_selector = :xpath
     Capybara::Mechanize.local_hosts = nil
   end
-  # config.filter_run :focus => true
 end
 
 REMOTE_TEST_URL = "http://localhost:#{rack_server.port}"
