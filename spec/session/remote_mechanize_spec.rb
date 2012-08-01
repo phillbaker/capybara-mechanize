@@ -46,19 +46,19 @@ describe Capybara::Session do
     it_should_behave_like "session with status code support"
 
 
-    context "remote app in a sub-domain" do
+    context "remote app in a sub-path" do
       before :each do
-        Capybara.app_host = "#{REMOTE_TEST_URL}/subsite"
+        Capybara.app_host = REMOTE_TEST_URL
       end
 
       it "follows relative link correctly" do
-        @session.visit "/relative_link_to_host"
+        @session.visit "/subsite/relative_link_to_host"
         @session.click_link "host"
         @session.body.should include('request_info2/host')
       end
 
       it "follows local link correctly" do
-        @session.visit "/local_link_to_host"
+        @session.visit "/subsite/local_link_to_host"
         @session.click_link "host"
         @session.body.should include('request_info2/host')
       end
