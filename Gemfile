@@ -2,9 +2,9 @@ source 'http://rubygems.org'
 
 gemspec
 
-gem 'rspec', '~> 2.11.0'
-gem "sinatra", "1.3.2"
-gem "rake", "0.9.2.2"
+gem 'rspec', '~> 2.12.0'
+gem "sinatra", "~> 1.3.2"
+gem "rake", "~> 10.0.3"
 
 group :development do
   gem "ruby-debug",   :platforms => :ruby_18
