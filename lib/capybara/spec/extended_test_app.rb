@@ -14,6 +14,13 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
       </form>}
   end
 
+  get '/form_with_fancy_params' do
+    %{<form action="/params" method="post">
+       <input id="cart_line_items__product_id" name="cart[line_items][][product_id]" value="2">
+       <input type="submit" value="submit" />
+      </form>}
+  end
+
   get '/request_info/form_with_no_action' do
     %{<form method="post">
        <input type="submit" value="submit" />
@@ -30,6 +37,22 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
 
   get '/request_info/*' do
     current_request_info
+  end
+
+  post '/params' do
+    begin
+      # The problem is the form is posted like:
+      # {"cart"=>{"line_items"=>"[{\"product_id\"=>\"2\"}]"}}
+      # Note that the array is wrapped in a string.
+      # I couldn't get this to happen in the mechanize
+      # project, so I'm assuming it's a capybara bug.
+      puts params
+      "first product id is #{ params["cart"]["line_items"].first["product_id"] }"
+    rescue
+      puts $!.message
+      puts $!.backtrace
+      raise
+    end
   end
 
   post '/request_info/*' do
@@ -66,4 +89,3 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
       "Current host is #{request.url}, method #{request.request_method.downcase}"
     end
 end
-
