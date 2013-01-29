@@ -28,25 +28,30 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     last_request_remote? ? remote_response : super
   end
 
-  def follow_redirects!
-    5.times do
-      follow_redirect! if last_response.redirect?
+  # process should be maintained as a direct copy of the base class's version with the addition of the marked line below
+  def process(method, path, attributes = {})
+    new_uri = URI.parse(path)
+    current_uri = URI.parse(current_url)
+
+    if new_uri.host
+      @current_host = new_uri.scheme + '://' + new_uri.host
+
+      # The process method has only been reimplemented in this derived class for this one line.
+      # Note that this line is copied directly from capybara pre-2.0
+      @current_host << ":#{new_uri.port}" if new_uri.port != new_uri.default_port
     end
-    raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if last_response.redirect?
-  end
 
-  def follow_redirect!
-    unless last_response.redirect?
-      raise "Last response was not a redirect. Cannot follow_redirect!"
+    if new_uri.relative?
+      if path.start_with?('?')
+        path = request_path + path
+      elsif not path.start_with?('/')
+        path = request_path.sub(%r(/[^/]*$), '/') + path
+      end
+      path = current_host + path
     end
 
-    get(last_location_header)
-  end
-
-  def process(method, path, *options)
     reset_cache!
-    send(method, path, *options)
-    follow_redirects!
+    send(method, path, attributes, env)
   end
 
   def process_without_redirect(method, path, attributes, headers)
@@ -57,38 +62,10 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     else
       register_local_request
 
-      path = determine_path(path)
-
-      reset_cache!
       send("racktest_#{method}", path, attributes, env.merge(headers))
     end
 
     @last_path = path
-  end
-
-  # TODO path Capybara to move this into its own method
-  def determine_path(path)
-    new_uri = URI.parse(path)
-    current_uri = URI.parse(current_url)
-
-    if new_uri.host
-      @current_host = new_uri.scheme + '://' + new_uri.host
-    end
-
-    if new_uri.relative?
-      path = request_path + path if path.start_with?('?')
-
-      unless path.start_with?('/')
-        folders = request_path.split('/')
-        if folders.empty?
-          path = '/' + path
-        else
-          path = (folders[0, folders.size - 1] << path).join('/')
-        end
-      end
-      path = current_host + path
-    end
-    path
   end
 
   alias :racktest_get :get
@@ -147,10 +124,6 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
 
   private
 
-  def last_location_header
-    last_request_remote? ? remote_response.page.response['Location'] : last_response['Location']
-  end
-
   def last_request_remote?
     !!@last_request_remote
   end
@@ -160,10 +133,17 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     @last_request_remote = false
   end
 
+  def remote_request_path
+    @last_remote_uri.nil? ? nil : @last_remote_uri.path
+  end
+
+  def request_path
+    last_request_remote? ? remote_request_path : super
+  end
+
   def process_remote_request(method, url, attributes, headers)
     if remote?(url)
       uri = URI.parse(url)
-      uri = resolve_relative_url(url) if uri.host.nil?
       @last_remote_uri = uri
       url = uri.to_s
 
@@ -179,40 +159,6 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       @last_request_remote = true
     end
   end
-
-  # paths are combined "intelligently" as close as they would be by the browser, but still interpreting
-  # routes from rails like "/user/login" as relative to a host including a possible subdirectory:
-  # eg: app_host = localhost/mysite/    url = /                 result = http://localhost/mysite/
-  # eg: app_host = localhost/mysite/    url = /home             result = http://localhost/mysite/home
-  # eg: app_host = localhost/mysite/    url = /user/login       result = http://localhost/mysite/user/login
-  # eg: app_host = localhost/mysite/    url = /mysite/login     result = http://localhost/mysite/login
-  #                                                               **** notice that 'mysite' is not repeated! *****
-  def resolve_relative_url(url)
-    if @last_remote_uri
-      base_uri = @last_remote_uri
-      path_prefix = ''
-    else
-      host = Capybara.app_host || Capybara.default_host
-      # do this in text so we don't get the host interpretted as the scheme.
-      host = "http://#{host}" unless host =~ %r{^https?://.*}
-      base_uri = URI.parse(host)
-      base_uri.path = '/' if base_uri.path.nil? || base_uri.path.empty?
-      if base_uri.path.length > 1
-        path_prefix = base_uri.path
-        path_prefix += '/' unless path_prefix.end_with?('/') || url.start_with?('/')
-
-        # if the prefix is already in the path, don't let it be there twice.
-        if url.start_with?(path_prefix)
-          path_prefix = ''
-        end
-      else
-        path_prefix = ''
-      end
-    end
-    uri = URI.parse(path_prefix + url)
-    result_uri = base_uri.merge uri
-  end
-
 
   def remote_response
     ResponseProxy.new(@agent.current_page) if @agent.current_page
@@ -242,6 +188,10 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       headers = page.response
       headers["content-type"].gsub!(';charset=utf-8', '') if headers["content-type"]
       headers
+    end
+
+    def [](key)
+      headers[key]
     end
 
     def status
