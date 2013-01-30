@@ -1,5 +1,7 @@
 require 'capybara/rack_test/driver'
 require 'mechanize'
+require 'capybara/mechanize/node'
+require 'capybara/mechanize/form'
 
 class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   extend Forwardable
@@ -75,7 +77,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
 
   alias :racktest_post :post
   def post(path, attributes = {}, headers = {})
-    process_without_redirect(:post, path, post_data(attributes), headers)
+    process_without_redirect(:post, path, attributes, headers)
   end
 
   alias :racktest_put :put
@@ -86,24 +88,6 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   alias :racktest_delete :delete
   def delete(path, attributes = {}, headers = {})
     process_without_redirect(:delete, path, attributes, headers)
-  end
-
-  def post_data(params)
-    params.inject({}) do |memo, param|
-      case param
-      when Hash
-        param.each {|attribute, value| memo[attribute] = value }
-        memo
-      when Array
-        case param.last
-        when Hash
-          param.last.each {|attribute, value| memo["#{param.first}[#{attribute}]"] = value }
-        else
-          memo[param.first] = param.last
-        end
-        memo
-      end
-    end
   end
 
   def remote?(url)
@@ -118,6 +102,10 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
         !Capybara::Mechanize.local_hosts.include?(host)
       end
     end
+  end
+
+  def find(selector)
+    dom.xpath(selector).map { |node| Capybara::Mechanize::Node.new(self, node) }
   end
 
   attr_reader :agent
@@ -149,10 +137,18 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
 
       reset_cache!
       begin
-        args = []
-        args << attributes unless attributes.empty?
-        args << headers unless headers.empty?
-        @agent.send(method, url, *args)
+        if method == :post
+          if attributes.is_a? Mechanize::Form
+            attributes.action = url
+            @agent.submit(attributes, nil, headers)
+          else
+            @agent.send(method, url, attributes, headers)
+          end
+        elsif method == :get
+          @agent.send(method, url, attributes, nil, headers)
+        else
+          @agent.send(method, url, attributes, headers)
+        end
       rescue => e
         raise "Received the following error for a #{method.to_s.upcase} request to #{url}: '#{e.message}'"
       end
