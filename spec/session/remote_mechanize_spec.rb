@@ -24,6 +24,13 @@ session_describe = Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mech
 
 session_describe.include_context("remote tests")
 
+disabler = DisableExternalTests.new
+disabler.tests_to_disable = [
+  ['#visit', 'when Capybara.always_include_port is true', 'should fetch a response from the driver with an absolute url without a port'],
+  ['#reset_session!', 'raises any errors caught inside the server']
+]
+disabler.disable(session_describe)
+
 describe Capybara::Session do
   context 'with remote mechanize driver' do
     include_context 'remote tests'

@@ -14,6 +14,9 @@ RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
   config.treat_symbols_as_metadata_keys_with_true_values = true
 
+  # Used with DisableExternalTests
+  config.filter_run_excluding :external_test_disabled
+
   config.after do
     Capybara::Mechanize.local_hosts = nil
   end
