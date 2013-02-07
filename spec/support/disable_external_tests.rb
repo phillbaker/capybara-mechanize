@@ -8,10 +8,10 @@ class DisableExternalTests
       example_description = to_disable.pop
 
       to_disable.each do |description|
-        example_group = example_group.children.select{ |g| g.description == description }.first
+        example_group = example_group.children.find{ |g| g.description == description }
       end
 
-      example = example_group.examples.select{ |e| e.description == example_description }.first
+      example = example_group.examples.find{ |e| e.description == example_description }
 
       example.metadata[:external_test_disabled] = true
     end
