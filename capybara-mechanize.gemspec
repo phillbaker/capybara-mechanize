@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   
-  s.add_runtime_dependency(%q<mechanize>, ["~> 2.3"])
-  s.add_runtime_dependency(%q<capybara>, ["~> 1.1"])
+  s.add_runtime_dependency(%q<mechanize>, ["~> 2.5"])
+  s.add_runtime_dependency(%q<capybara>, ["~> 2.0", ">= 2.0.1"])
 end
 
