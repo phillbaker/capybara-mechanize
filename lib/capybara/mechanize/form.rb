@@ -60,6 +60,6 @@ class Capybara::Mechanize::Form < Capybara::RackTest::Form
   end
 
   def form_referer
-    driver.last_response.page
+    Mechanize::Page.new URI(driver.current_url)
   end
 end

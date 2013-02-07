@@ -91,5 +91,13 @@ describe Capybara::Session do
       session.visit("#{REMOTE_TEST_URL}/request_info/user_agent")
       session.body.should include("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.853.0 Safari/535.2")
     end
+
+    context 'form referer when switching from local to remote' do
+      it 'sends the referer' do
+        session.visit "/form_posts_to/#{REMOTE_TEST_URL}/get_referer"
+        session.click_button 'submit'
+        session.body.should include 'Got referer'
+      end
+    end
   end
 end

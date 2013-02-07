@@ -56,6 +56,18 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
     %{correct redirect}
   end
 
+  get %r{/form_posts_to/(.*)} do
+    %{
+      <form action="#{params[:captures].first}" method="post">
+        <input type="submit" value="submit" />
+      </form>
+    }
+  end
+
+  post '/get_referer' do
+    request.referer.nil? ? "No referer" : "Got referer: #{request.referer}"
+  end
+
   private
 
     def current_request_info
