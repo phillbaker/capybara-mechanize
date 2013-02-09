@@ -49,7 +49,6 @@ Then you are ready to run the test like so
 
 Todo
 ----
-* Make the last 12 failing remote session spec pass, see remote_mechanize_spec and uncomment one line there to see them fail
 * Test this driver with non-rack/non-ruby projects
 
 Note on Patches/Pull Requests
