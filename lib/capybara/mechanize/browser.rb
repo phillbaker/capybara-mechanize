@@ -1,5 +1,7 @@
 require 'capybara/rack_test/driver'
 require 'mechanize'
+require 'capybara/mechanize/node'
+require 'capybara/mechanize/form'
 
 class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   extend Forwardable
@@ -28,81 +30,22 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     last_request_remote? ? remote_response : super
   end
 
-  # process should be maintained as a direct copy of the base class's version with the addition of the marked line below
-  def process(method, path, attributes = {})
-    new_uri = URI.parse(path)
-    current_uri = URI.parse(current_url)
+  # For each of these http methods, we want to intercept the method call.
+  # Then we determine if the call is remote or local.
+  # Remote: Handle it with our process_remote_request method.
+  # Local: Register the local request and call super to let RackTest get it.
+  [:get, :post, :put, :delete].each do |method|
+    define_method(method) do |path, params = {}, env = {}, &block|
+      path = @last_path if path.nil? || path.empty?
 
-    if new_uri.host
-      @current_host = new_uri.scheme + '://' + new_uri.host
-
-      # The process method has only been reimplemented in this derived class for this one line.
-      # Note that this line is copied directly from capybara pre-2.0
-      @current_host << ":#{new_uri.port}" if new_uri.port != new_uri.default_port
-    end
-
-    if new_uri.relative?
-      if path.start_with?('?')
-        path = request_path + path
-      elsif not path.start_with?('/')
-        path = request_path.sub(%r(/[^/]*$), '/') + path
+      if remote?(path)
+        process_remote_request(method, path, params, env, &block)
+      else
+        register_local_request
+        super(path, params, env, &block)
       end
-      path = current_host + path
-    end
 
-    reset_cache!
-    send(method, path, attributes, env)
-  end
-
-  def process_without_redirect(method, path, attributes, headers)
-    path = @last_path if path.nil? || path.empty?
-
-    if remote?(path)
-      process_remote_request(method, path, attributes, headers)
-    else
-      register_local_request
-
-      send("racktest_#{method}", path, attributes, env.merge(headers))
-    end
-
-    @last_path = path
-  end
-
-  alias :racktest_get :get
-  def get(path, attributes = {}, headers = {})
-    process_without_redirect(:get, path, attributes, headers)
-  end
-
-  alias :racktest_post :post
-  def post(path, attributes = {}, headers = {})
-    process_without_redirect(:post, path, post_data(attributes), headers)
-  end
-
-  alias :racktest_put :put
-  def put(path, attributes = {}, headers = {})
-    process_without_redirect(:put, path, attributes, headers)
-  end
-
-  alias :racktest_delete :delete
-  def delete(path, attributes = {}, headers = {})
-    process_without_redirect(:delete, path, attributes, headers)
-  end
-
-  def post_data(params)
-    params.inject({}) do |memo, param|
-      case param
-      when Hash
-        param.each {|attribute, value| memo[attribute] = value }
-        memo
-      when Array
-        case param.last
-        when Hash
-          param.last.each {|attribute, value| memo["#{param.first}[#{attribute}]"] = value }
-        else
-          memo[param.first] = param.last
-        end
-        memo
-      end
+      @last_path = path
     end
   end
 
@@ -118,6 +61,10 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
         !Capybara::Mechanize.local_hosts.include?(host)
       end
     end
+  end
+
+  def find(selector)
+    dom.xpath(selector).map { |node| Capybara::Mechanize::Node.new(self, node) }
   end
 
   attr_reader :agent
@@ -149,15 +96,32 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
 
       reset_cache!
       begin
-        args = []
-        args << attributes unless attributes.empty?
-        args << headers unless headers.empty?
-        @agent.send(method, url, *args)
+        if method == :post
+          if attributes.is_a? Mechanize::Form
+            submit_mechanize_form(url, attributes, headers)
+          else
+            @agent.send(method, url, attributes, headers)
+          end
+        elsif method == :get
+          if attributes.is_a? Mechanize::Form
+            submit_mechanize_form(url, attributes, headers)
+          else
+            referer = headers['HTTP_REFERER']
+            @agent.send(method, url, attributes, referer, headers)
+          end
+        else
+          @agent.send(method, url, attributes, headers)
+        end
       rescue => e
         raise "Received the following error for a #{method.to_s.upcase} request to #{url}: '#{e.message}'"
       end
       @last_request_remote = true
     end
+  end
+
+  def submit_mechanize_form(url, form, headers)
+    form.action = url
+    @agent.submit(form, nil, headers)
   end
 
   def remote_response

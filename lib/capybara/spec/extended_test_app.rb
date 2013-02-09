@@ -36,10 +36,6 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
     current_request_info
   end
 
-  get '/host' do
-    "Current host is #{request.scheme}://#{request.host}:#{request.port}"
-  end
-
   get '/subsite/relative_link_to_host' do
     %{<a href="/subsite/request_info2/host">host</a>}
   end
@@ -55,9 +51,21 @@ class ExtendedTestApp < TestApp#< Sinatra::Base
   get '/redirect_with_http_param' do
     redirect '/redirect_target?foo=http'
   end
-  
+
   get '/redirect_target' do
     %{correct redirect}
+  end
+
+  get %r{/form_posts_to/(.*)} do
+    %{
+      <form action="#{params[:captures].first}" method="post">
+        <input type="submit" value="submit" />
+      </form>
+    }
+  end
+
+  post '/get_referer' do
+    request.referer.nil? ? "No referer" : "Got referer: #{request.referer}"
   end
 
   private
