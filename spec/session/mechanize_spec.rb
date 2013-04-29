@@ -9,7 +9,8 @@ Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mechanize", :skip => [
   :screenshot,
   :frames,
   :windows,
-  :server
+  :server,
+  :hover
 ]
 
 describe Capybara::Session do
