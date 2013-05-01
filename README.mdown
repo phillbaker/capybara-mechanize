@@ -1,6 +1,8 @@
 Capybara-mechanize
 ==================
 
+[![Build Status](https://travis-ci.org/jeroenvandijk/capybara-mechanize.png?branch=master)](https://travis-ci.org/jeroenvandijk/capybara-mechanize)
+
 This gems makes it possible to use Capybara for (partially) remote testing. It inherits most functionality from the RackTest driver and only uses [Mechanize](https://github.com/sparklemotion/mechanize) for remote requests. 
 
 It is currently in use to test the integration between a Rails application and Twitter authorization and sharing.
