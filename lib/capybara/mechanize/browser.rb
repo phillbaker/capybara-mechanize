@@ -63,12 +63,8 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     end
   end
 
-  def find(format, selector)
-    if format==:css
-      dom.css(selector, Capybara::RackTest::CSSHandlers.new)
-    else
-      dom.xpath(selector)
-    end.map { |node| Capybara::Mechanize::Node.new(self, node) }
+  def find(selector)
+    dom.xpath(selector).map { |node| Capybara::Mechanize::Node.new(self, node) }
   end
 
   attr_reader :agent

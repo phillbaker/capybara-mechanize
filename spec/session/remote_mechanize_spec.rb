@@ -19,8 +19,7 @@ session_describe = Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mech
   :screenshot,
   :frames,
   :windows,
-  :server,
-  :hover
+  :server
 ]
 
 session_describe.include_context("remote tests")
