@@ -99,26 +99,24 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       url = uri.to_s
 
       reset_cache!
-      begin
-        if method == :post
-          if attributes.is_a? Mechanize::Form
-            submit_mechanize_form(url, attributes, headers)
-          else
-            @agent.send(method, url, attributes, headers)
-          end
-        elsif method == :get
-          if attributes.is_a? Mechanize::Form
-            submit_mechanize_form(url, attributes, headers)
-          else
-            referer = headers['HTTP_REFERER']
-            @agent.send(method, url, attributes, referer, headers)
-          end
+      
+      if method == :post
+        if attributes.is_a? Mechanize::Form
+          submit_mechanize_form(url, attributes, headers)
         else
           @agent.send(method, url, attributes, headers)
         end
-      rescue => e
-        raise "Received the following error for a #{method.to_s.upcase} request to #{url}: '#{e.message}'"
+      elsif method == :get
+        if attributes.is_a? Mechanize::Form
+          submit_mechanize_form(url, attributes, headers)
+        else
+          referer = headers['HTTP_REFERER']
+          @agent.send(method, url, attributes, referer, headers)
+        end
+      else
+        @agent.send(method, url, attributes, headers)
       end
+      
       @last_request_remote = true
     end
   end
