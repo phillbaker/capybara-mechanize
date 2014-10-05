@@ -108,9 +108,22 @@ describe Capybara::Mechanize::Driver, 'local' do
       Capybara.default_host = 'www.local.com'
     end
 
-    it "should allow local hosts to be set" do
-      Capybara::Mechanize.local_hosts = ['subdomain.local.com']
-      driver.should_not be_remote('http://subdomain.local.com')
+    after do
+      Capybara.default_host = CAPYBARA_DEFAULT_HOST
+    end
+
+    context "local hosts" do
+      before do
+        Capybara::Mechanize.local_hosts = ['subdomain.local.com']
+      end
+
+      after do
+        Capybara::Mechanize.local_hosts = nil
+      end
+
+      it "should allow local hosts to be set" do
+        driver.should_not be_remote('http://subdomain.local.com')
+      end
     end
 
     it "should treat urls with the same host names as local" do
@@ -173,11 +186,8 @@ describe Capybara::Mechanize::Driver, 'local' do
       should_be_a_local_get
     end
 
-    after do
-      Capybara.default_host = nil
-    end
-
     it "should raise a useful error for sites that return a 404, because it is probably a misconfiguration" do
+      pending
       expect {
         driver.visit("http://iamreallysurethatthisdoesntexist.com/canttouchthis")
       }.to raise_error(%r{Received the following error for a GET request to http://iamreallysurethatthisdoesntexist.com/canttouchthis:})
@@ -192,6 +202,10 @@ describe Capybara::Mechanize::Driver, 'local' do
   describe '#reset!' do
     before do
       Capybara.default_host = 'http://www.local.com'
+    end
+
+    after do
+      Capybara.default_host = CAPYBARA_DEFAULT_HOST
     end
 
     it 'should reset remote host' do

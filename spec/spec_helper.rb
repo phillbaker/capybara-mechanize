@@ -28,3 +28,5 @@ RSpec.configure do |config|
 
   config.order = "random"
 end
+
+CAPYBARA_DEFAULT_HOST = 'http://www.example.com'
