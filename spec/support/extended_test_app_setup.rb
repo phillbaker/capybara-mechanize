@@ -9,6 +9,7 @@ class ExtendedTestAppSetup
   def boot
     boot_test_app
     boot_remote_app
+    Capybara.raise_server_errors = false
 
     self
   end

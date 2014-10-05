@@ -186,11 +186,27 @@ describe Capybara::Mechanize::Driver, 'local' do
       should_be_a_local_get
     end
 
-    it "should raise a useful error for sites that return a 404, because it is probably a misconfiguration" do
-      pending
-      expect {
-        driver.visit("http://iamreallysurethatthisdoesntexist.com/canttouchthis")
-      }.to raise_error(%r{Received the following error for a GET request to http://iamreallysurethatthisdoesntexist.com/canttouchthis:})
+    it "passes the status code of remote calls back to be validated" do
+      quietly do
+        driver.visit(remote_test_url)
+        driver.get('/asdfafadfsdfs')
+        driver.response.status.should be >= 400
+      end
+    end
+
+    context "when errors are set to true" do
+      it "raises an useful error because it is probably a misconfiguration" do
+        quietly do
+          original = Capybara.raise_server_errors
+
+          expect {
+            driver.visit(remote_test_url)
+            Capybara.raise_server_errors = true
+            driver.get('/asdfafadfsdfs')
+          }.to raise_error(%r{Received the following error for a GET request to /asdfafadfsdfs:})
+          Capybara.raise_server_errors = original
+        end
+      end
     end
   end
 

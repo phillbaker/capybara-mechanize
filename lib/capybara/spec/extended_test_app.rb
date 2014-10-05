@@ -1,6 +1,6 @@
 require 'capybara/spec/test_app'
 
-class ExtendedTestApp < TestApp#< Sinatra::Base
+class ExtendedTestApp < TestApp
   set :environment, :production # so we don't get debug info that makes our test pass!
   disable :protection
 

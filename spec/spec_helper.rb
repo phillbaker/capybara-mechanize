@@ -19,6 +19,7 @@ RSpec.configure do |config|
 
   config.include RemoteTestUrl
   config.extend RemoteTestUrl
+  config.include Capybara::SpecHelper
 
   config.after do
     Capybara::Mechanize.local_hosts = nil
