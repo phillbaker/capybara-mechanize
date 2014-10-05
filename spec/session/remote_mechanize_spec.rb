@@ -6,7 +6,7 @@ end
 
 shared_context "remote tests" do
   before do
-    Capybara.app_host = REMOTE_TEST_URL
+    Capybara.app_host = remote_test_url
   end
 
   after do

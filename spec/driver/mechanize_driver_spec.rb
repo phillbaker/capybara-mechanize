@@ -90,7 +90,6 @@ describe Capybara::Mechanize::Driver, 'local' do
   end
 
   context "with an app_host" do
-
     before do
       Capybara.app_host = 'http://www.remote.com'
     end
@@ -123,7 +122,7 @@ describe Capybara::Mechanize::Driver, 'local' do
     end
 
     it "should treat relative paths as remote if the previous request was remote" do
-      driver.visit(REMOTE_TEST_URL)
+      driver.visit(remote_test_url)
       driver.should be_remote('/some_relative_link')
     end
 
@@ -146,7 +145,7 @@ describe Capybara::Mechanize::Driver, 'local' do
     end
 
     it "should consider relative paths to be remote when the previous request was remote" do
-      driver.visit("#{REMOTE_TEST_URL}/host")
+      driver.visit("#{remote_test_url}/host")
       driver.get('/host')
 
       should_be_a_remote_get
@@ -156,7 +155,7 @@ describe Capybara::Mechanize::Driver, 'local' do
     it "should always switch to the right context" do
       driver.visit('http://www.local.com/host')
       driver.get('/host')
-      driver.get("#{REMOTE_TEST_URL}/host")
+      driver.get("#{remote_test_url}/host")
       driver.get('/host')
       driver.get('http://www.local.com/host')
 
@@ -165,12 +164,12 @@ describe Capybara::Mechanize::Driver, 'local' do
     end
 
     it "should follow redirects from local to remote" do
-      driver.visit("http://www.local.com/redirect_to/#{REMOTE_TEST_URL}/host")
+      driver.visit("http://www.local.com/redirect_to/#{remote_test_url}/host")
       should_be_a_remote_get
     end
 
     it "should follow redirects from remote to local" do
-      driver.visit("#{REMOTE_TEST_URL}/redirect_to/http://www.local.com/host")
+      driver.visit("#{remote_test_url}/redirect_to/http://www.local.com/host")
       should_be_a_local_get
     end
 
@@ -179,14 +178,14 @@ describe Capybara::Mechanize::Driver, 'local' do
     end
 
     it "should raise a useful error for sites that return a 404, because it is probably a misconfiguration" do
-      expect { 
+      expect {
         driver.visit("http://iamreallysurethatthisdoesntexist.com/canttouchthis")
       }.to raise_error(%r{Received the following error for a GET request to http://iamreallysurethatthisdoesntexist.com/canttouchthis:})
     end
   end
 
   it "should include the right host when remote" do
-    driver.visit("#{REMOTE_TEST_URL}/host")
+    driver.visit("#{remote_test_url}/host")
     should_be_a_remote_get
   end
 
@@ -196,7 +195,7 @@ describe Capybara::Mechanize::Driver, 'local' do
     end
 
     it 'should reset remote host' do
-      driver.visit("#{REMOTE_TEST_URL}/host")
+      driver.visit("#{remote_test_url}/host")
       should_be_a_remote_get
       driver.reset!
       driver.visit("/host")
@@ -205,11 +204,11 @@ describe Capybara::Mechanize::Driver, 'local' do
   end
 
   def should_be_a_remote_get
-    driver.current_url.should include(REMOTE_TEST_URL)
+    driver.current_url.should include(remote_test_url)
   end
 
   def should_be_a_local_get
     driver.current_url.should include("www.local.com")
   end
-# 
+
 end

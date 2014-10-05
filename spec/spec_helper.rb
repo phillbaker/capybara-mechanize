@@ -17,12 +17,14 @@ RSpec.configure do |config|
   # Used with DisableExternalTests
   config.filter_run_excluding :external_test_disabled
 
+  config.include RemoteTestUrl
+  config.extend RemoteTestUrl
+
   config.after do
     Capybara::Mechanize.local_hosts = nil
   end
 
   Capybara::SpecHelper.configure(config)
-end
 
-setup = ExtendedTestAppSetup.new.boot
-REMOTE_TEST_URL = setup.remote_test_url
+  config.order = "random"
+end
