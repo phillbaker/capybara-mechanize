@@ -19,6 +19,23 @@ Thanks to [Pinkelstar](http://www.pinkelstar.com) for giving me the time and the
 
     require 'capybara/mechanize'
 
+### Further configuration of Mechanize
+
+Upon instantiation of a `Driver`, you can configure [`mechanize` agent
+options](http://www.rubydoc.info/gems/mechanize/Mechanize) in a `#configure` block:
+
+```ruby
+Capybara.register_driver :mechanize do |app|
+  driver = Capybara::Mechanize::Driver.new(app)
+  driver.configure do |agent|
+    # Configure other Mechanize options here.
+    agent.log = Logger.new "mech.log"
+    agent.user_agent_alias = 'Mac Safari'
+  end
+  driver
+end
+```
+
 ### Usage with Cucumber and tags
 
 A @mechanize tag is added to your hooks when you add the following line to your env.rb

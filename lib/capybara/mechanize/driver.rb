@@ -11,9 +11,12 @@ class Capybara::Mechanize::Driver < Capybara::RackTest::Driver
   def remote?(url)
     browser.remote?(url)
   end
-  
+
+  def configure(&block)
+    yield(browser.agent) if block_given?
+  end
+
   def browser
     @browser ||= Capybara::Mechanize::Browser.new(self)
   end
-  
 end
