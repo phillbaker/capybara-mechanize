@@ -19,6 +19,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   def reset_host!
     @last_remote_uri = nil
     @last_request_remote = nil
+    @errored_remote_response = nil
     super
   end
 
@@ -71,7 +72,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     end.map { |node| Capybara::Mechanize::Node.new(self, node) }
   end
 
-  attr_reader :agent
+  attr_reader :agent, :errored_remote_response
 
   private
 
@@ -116,8 +117,13 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
         else
           @agent.send(method, url, attributes, headers)
         end
-      rescue => e
-        raise "Received the following error for a #{method.to_s.upcase} request to #{url}: '#{e.message}'"
+        @errored_remote_response = nil
+      rescue Mechanize::ResponseCodeError => e
+        @errored_remote_response = e.page
+
+        if Capybara.raise_server_errors
+          raise "Received the following error for a #{method.to_s.upcase} request to #{url}: '#{e.message}'"
+        end
       end
       @last_request_remote = true
     end
@@ -129,7 +135,11 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
 
   def remote_response
-    ResponseProxy.new(@agent.current_page) if @agent.current_page
+    if errored_remote_response
+      ResponseProxy.new(errored_remote_response)
+    elsif @agent.current_page
+      ResponseProxy.new(@agent.current_page)
+    end
   end
 
   def default_user_agent
