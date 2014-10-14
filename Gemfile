@@ -2,7 +2,8 @@ source 'http://rubygems.org'
 
 gemspec
 
-gem 'rspec', '~> 2.12.0'
+gem 'rspec', '~> 2.99.0'
+gem 'launchy', '>= 2.0.4'
 gem 'sinatra', '~> 1.3.3'
 gem 'rake', '~> 10.0.3'
 gem 'rdoc'

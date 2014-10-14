@@ -14,13 +14,15 @@ shared_context "remote tests" do
   end
 end
 
-session_describe = Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mechanize", :skip => [
+session_describe = Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mechanize", :capybara_skip => [
   :js,
   :screenshot,
   :frames,
   :windows,
   :server,
-  :hover
+  :hover,
+  :modals,
+  :about_scheme
 ]
 
 session_describe.include_context("remote tests")

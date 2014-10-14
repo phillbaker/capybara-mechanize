@@ -4,13 +4,15 @@ module TestSessions
   Mechanize = Capybara::Session.new(:mechanize, TestApp)
 end
 
-Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mechanize", :skip => [
+Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mechanize", :capybara_skip => [
   :js,
   :screenshot,
   :frames,
   :windows,
   :server,
-  :hover
+  :hover,
+  :modals,
+  :about_scheme
 ]
 
 describe Capybara::Session do
@@ -19,6 +21,10 @@ describe Capybara::Session do
 
     before do
       Capybara.default_host = 'http://www.local.com'
+    end
+
+    after do
+      Capybara.default_host = CAPYBARA_DEFAULT_HOST
     end
 
     describe '#driver' do
