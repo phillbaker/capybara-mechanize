@@ -4,13 +4,15 @@ module TestSessions
   Mechanize = Capybara::Session.new(:mechanize, TestApp)
 end
 
-Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mechanize", :skip => [
+Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mechanize", :capybara_skip => [
   :js,
   :screenshot,
   :frames,
   :windows,
   :server,
-  :hover
+  :hover,
+  :modals,
+  :about_scheme
 ]
 
 describe Capybara::Session do
@@ -19,6 +21,10 @@ describe Capybara::Session do
 
     before do
       Capybara.default_host = 'http://www.local.com'
+    end
+
+    after do
+      Capybara.default_host = CAPYBARA_DEFAULT_HOST
     end
 
     describe '#driver' do
@@ -71,31 +77,31 @@ describe Capybara::Session do
     end
 
     it "should use the last remote url when following relative links" do
-      session.visit("#{REMOTE_TEST_URL}/relative_link_to_host")
+      session.visit("#{remote_test_url}/relative_link_to_host")
       session.click_link "host"
-      session.body.should include("Current host is #{REMOTE_TEST_URL}/request_info/host, method get")
+      session.body.should include("Current host is #{remote_test_url}/request_info/host, method get")
     end
 
     it "should use the last remote url when submitting a form with a relative action" do
-      session.visit("#{REMOTE_TEST_URL}/form_with_relative_action_to_host")
+      session.visit("#{remote_test_url}/form_with_relative_action_to_host")
       session.click_button "submit"
-      session.body.should include("Current host is #{REMOTE_TEST_URL}/request_info/host, method post")
+      session.body.should include("Current host is #{remote_test_url}/request_info/host, method post")
     end
 
     it "should use the last url when submitting a form with no action" do
-      session.visit("#{REMOTE_TEST_URL}/request_info/form_with_no_action")
+      session.visit("#{remote_test_url}/request_info/form_with_no_action")
       session.click_button "submit"
-      session.body.should include("Current host is #{REMOTE_TEST_URL}/request_info/form_with_no_action, method post")
+      session.body.should include("Current host is #{remote_test_url}/request_info/form_with_no_action, method post")
     end
 
     it "should send correct user agent" do
-      session.visit("#{REMOTE_TEST_URL}/request_info/user_agent")
+      session.visit("#{remote_test_url}/request_info/user_agent")
       session.body.should include("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.853.0 Safari/535.2")
     end
 
     context 'form referer when switching from local to remote' do
       it 'sends the referer' do
-        session.visit "/form_posts_to/#{REMOTE_TEST_URL}/get_referer"
+        session.visit "/form_posts_to/#{remote_test_url}/get_referer"
         session.click_button 'submit'
         session.body.should include 'Got referer'
       end
