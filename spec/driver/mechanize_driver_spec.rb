@@ -3,6 +3,15 @@ require 'spec_helper'
 describe Capybara::Mechanize::Driver, 'local' do
   let(:driver) { Capybara::Mechanize::Driver.new(ExtendedTestApp) }
 
+  describe "#configure" do
+    it "allows extended configuration of the agent" do
+      ::Mechanize.any_instance.should_receive(:foo=).with("test")
+      driver.configure do |agent|
+        agent.foo = "test"
+      end
+    end
+  end
+
   describe ':headers option' do
     it 'should always set headers' do
       driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
