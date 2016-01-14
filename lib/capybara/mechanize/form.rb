@@ -10,7 +10,10 @@ class Capybara::Mechanize::Form < Capybara::RackTest::Form
     class << node
       def search(*args); []; end
     end
-    node['method'] = (button['formmethod'] || method).to_s.upcase
+
+    node['method'] = button && button['formmethod']
+
+    node['method'] ||= (respond_to?(:request_method, true) ? request_method : method).to_s.upcase
 
     if self.multipart?
       node['enctype'] = 'multipart/form-data'
