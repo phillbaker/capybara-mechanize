@@ -13,7 +13,7 @@ class DisableExternalTests
 
       example = example_group.examples.find{ |e| e.description == example_description }
 
-      example.metadata[:external_test_disabled] = true
+      example.metadata[:external_test_disabled] = true unless example.nil?
     end
 
   end
