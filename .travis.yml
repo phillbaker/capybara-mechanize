@@ -2,13 +2,22 @@ language: ruby
 bundler_args: --without development
 before_install:
   - gem update --system
+  - gem update bundler
   - gem --version
+  - bundle --version
 rvm:
   - 1.9.3
   - 2.0.0
   - jruby-19mode
   - ruby-head
+gemfile:
+  - Gemfile
+  - gemfiles/Gemfile.capybara_2.4
 matrix:
+  include:
+    - rvm: ruby-head
+      gemfile: gemfiles/Gemfile.capybara_master
   allow_failures:
     - rvm: jruby-19mode
     - rvm: ruby-head
+

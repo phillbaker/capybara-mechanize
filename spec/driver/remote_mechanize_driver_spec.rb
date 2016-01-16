@@ -32,14 +32,14 @@ describe Capybara::Mechanize::Driver, 'remote' do
     context "for a post request" do
       it 'transforms nested map in post data' do
         driver.post("#{remote_test_url}/form", {:form => {:key => 'value'}})
-        driver.html.should include(':key=>"value"')
+        driver.html.should match(/:key=>"value"|key: value/)
       end
     end
 
     context 'process remote request' do
       it 'transforms nested map in post data' do
         driver.submit(:post, "#{remote_test_url}/form", {:form => {:key => 'value'}})
-        driver.html.should include(':key=>"value"')
+        driver.html.should match(/:key=>"value"|key: value/)
       end
     end
   end
