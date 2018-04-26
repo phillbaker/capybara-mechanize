@@ -18,7 +18,6 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
 
   s.add_runtime_dependency(%q<mechanize>, ["~> 2.7.0"])
-  s.add_runtime_dependency(%q<rack-test>, ["~> 0.6.3"])
   s.add_runtime_dependency(%q<capybara>, [">= 2.4.4", "< 4"])
 end
 
