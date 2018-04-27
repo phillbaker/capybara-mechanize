@@ -6,9 +6,10 @@ before_install:
   - gem --version
   - bundle --version
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - jruby-19mode
+  - 2.3
+  - 2.4
+  - 2.5
+  - jruby
   - ruby-head
 gemfile:
   - Gemfile
@@ -18,6 +19,6 @@ matrix:
     - rvm: ruby-head
       gemfile: gemfiles/Gemfile.capybara_master
   allow_failures:
-    - rvm: jruby-19mode
+    - rvm: jruby
     - rvm: ruby-head
 
