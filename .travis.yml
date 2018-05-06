@@ -1,4 +1,6 @@
 language: ruby
+sudo: false
+# cache: bundler
 bundler_args: --without development
 before_install:
   - gem update --system
@@ -6,18 +8,15 @@ before_install:
   - gem --version
   - bundle --version
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - jruby-19mode
+  - 2.3.7
+  - 2.4.4
+  - 2.5.1
+  - jruby
   - ruby-head
-gemfile:
-  - Gemfile
-  - gemfiles/Gemfile.capybara_2.4
 matrix:
   include:
     - rvm: ruby-head
       gemfile: gemfiles/Gemfile.capybara_master
   allow_failures:
-    - rvm: jruby-19mode
+    - rvm: jruby
     - rvm: ruby-head
-
