@@ -1,6 +1,6 @@
 language: ruby
 sudo: false
-cache: bundler
+# cache: bundler
 bundler_args: --without development
 before_install:
   - gem update --system
