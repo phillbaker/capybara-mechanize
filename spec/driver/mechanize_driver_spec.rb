@@ -114,7 +114,7 @@ describe Capybara::Mechanize::Driver, 'local' do
 
   context "with a default url, no app host" do
     before do
-      Capybara.default_host = 'www.local.com'
+      Capybara.default_host = 'http://www.local.com'
     end
 
     after do

@@ -1,6 +1,6 @@
 class Capybara::Mechanize::Node < Capybara::RackTest::Node
   def click
-    if tag_name == 'a'
+    if tag_name == 'a' or tag_name == 'label'
       super
     elsif (tag_name == 'input' and %w(submit image).include?(type)) or
         ((tag_name == 'button') and type.nil? or type == "submit")

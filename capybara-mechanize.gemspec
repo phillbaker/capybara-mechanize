@@ -19,6 +19,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency(%q<mechanize>, ["~> 2.7.0"])
   s.add_runtime_dependency(%q<rack-test>, ["~> 0.6.3"])
-  s.add_runtime_dependency(%q<capybara>, [">= 2.4.4", "< 2.7"])
+  s.add_runtime_dependency(%q<capybara>, [">= 2.4.4", "< 2.9"])
 end
 

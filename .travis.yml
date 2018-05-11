@@ -19,6 +19,6 @@ matrix:
     - rvm: ruby-head
       gemfile: gemfiles/Gemfile.capybara_master
   allow_failures:
-    - rvm: jruby-19mode
+    - rvm: jruby
     - rvm: ruby-head
 
