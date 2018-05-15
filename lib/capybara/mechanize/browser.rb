@@ -47,6 +47,18 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
       end
 
       @last_path = path
+      @last_method = method
+      @last_params = params
+      @last_env = env
+    end
+  end
+
+  def refresh
+    if last_request_remote?
+      process_remote_request(@last_method, @last_remote_uri.to_s, @last_params, @last_env)
+    else
+      register_local_request
+      super
     end
   end
 
