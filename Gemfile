@@ -4,7 +4,7 @@ gemspec
 
 gem 'rspec', '~> 2.99.0'
 gem 'launchy', '>= 2.0.4'
-gem 'sinatra', '~> 1.3.3'
+gem 'sinatra', '~> 1.4.0'
 gem 'rake', '~> 10.0.3'
 gem 'rdoc'
 
