@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gemspec :path => '..'
 
-gem 'capybara', '~> 2.4.4'
+gem 'capybara', '~> 2.18.0'
 
 gem 'rspec', '~> 2.99.0'
 gem 'launchy', '>= 2.0.4'

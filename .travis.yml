@@ -13,7 +13,7 @@ rvm:
   - ruby-head
 gemfile:
   - Gemfile
-  - gemfiles/Gemfile.capybara_2.4
+  - gemfiles/Gemfile.capybara_2
 matrix:
   include:
     - rvm: ruby-head
