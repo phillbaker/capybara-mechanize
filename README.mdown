@@ -56,6 +56,10 @@ When you want to use this driver to test a remote application. You have to set t
     
 Note that I haven't tested this case for my self yet. The Capybara tests pass for this situation though so it should work! Please provide me with feedback if it doesn't.
 
+### HTTP errors
+
+If you receive the error `Net::HTTP::Persistent::Error: too many connection resets`, try setting a timeout value: `page.driver.browser.agent.idle_timeout = 0.4`.
+
 ## Running tests
 
 Run bundler
