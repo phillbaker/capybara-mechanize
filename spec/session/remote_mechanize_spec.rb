@@ -23,7 +23,9 @@ session_describe = Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mech
   :hover,
   :modals,
   :about_scheme,
-  :send_keys
+  :send_keys,
+  :css,
+  :download
 ]
 
 session_describe.include_context("remote tests")

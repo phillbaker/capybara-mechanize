@@ -19,4 +19,9 @@ class Capybara::Mechanize::Driver < Capybara::RackTest::Driver
   def browser
     @browser ||= Capybara::Mechanize::Browser.new(self)
   end
+
+  def reset!
+    @browser.agent.shutdown
+    super
+  end
 end
