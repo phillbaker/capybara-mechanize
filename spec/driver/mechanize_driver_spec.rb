@@ -5,7 +5,7 @@ describe Capybara::Mechanize::Driver, 'local' do
 
   describe "#configure" do
     it "allows extended configuration of the agent" do
-      ::Mechanize.any_instance.should_receive(:foo=).with("test")
+      expect_any_instance_of(::Mechanize).to receive(:foo=).with("test")
       driver.configure do |agent|
         agent.foo = "test"
       end
@@ -16,27 +16,27 @@ describe Capybara::Mechanize::Driver, 'local' do
     it 'should always set headers' do
       driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       driver.visit('/get_header')
-      driver.html.should include('foobar')
+      expect(driver.html).to include('foobar')
     end
 
     it 'should keep headers on link clicks' do
       driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       driver.visit('/header_links')
       driver.find_xpath('.//a').first.click
-      driver.html.should include('foobar')
+      expect(driver.html).to include('foobar')
     end
 
     it 'should keep headers on form submit' do
       driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       driver.visit('/header_links')
       driver.find_xpath('.//input').first.click
-      driver.html.should include('foobar')
+      expect(driver.html).to include('foobar')
     end
 
     it 'should keep headers on redirects' do
       driver = Capybara::RackTest::Driver.new(TestApp, :headers => {'HTTP_FOO' => 'foobar'})
       driver.visit('/get_header_via_redirect')
-      driver.html.should include('foobar')
+      expect(driver.html).to include('foobar')
     end
   end
 
@@ -45,16 +45,16 @@ describe Capybara::Mechanize::Driver, 'local' do
       driver = Capybara::RackTest::Driver.new(TestApp)
 
       driver.visit('/redirect')
-      driver.response.header['Location'].should be_nil
-      driver.browser.current_url.should match %r{/landed$}
+      expect(driver.response.header['Location']).to be_nil
+      expect(driver.browser.current_url).to match %r{/landed$}
     end
 
     it "is possible to not follow redirects" do
       driver = Capybara::RackTest::Driver.new(TestApp, :follow_redirects => false)
 
       driver.visit('/redirect')
-      driver.response.header['Location'].should match %r{/redirect_again$}
-      driver.browser.current_url.should match %r{/redirect$}
+      expect(driver.response.header['Location']).to match %r{/redirect_again$}
+      expect(driver.browser.current_url).to match %r{/redirect$}
     end
   end
 
@@ -64,7 +64,7 @@ describe Capybara::Mechanize::Driver, 'local' do
 
       it "should follow 5 redirects" do
         driver.visit("/redirect/5/times")
-        driver.html.should include('redirection complete')
+        expect(driver.html).to include('redirection complete')
       end
 
       it "should not follow more than 6 redirects" do
@@ -79,7 +79,7 @@ describe Capybara::Mechanize::Driver, 'local' do
 
       it "should follow 21 redirects" do
         driver.visit("/redirect/21/times")
-        driver.html.should include('redirection complete')
+        expect(driver.html).to include('redirection complete')
       end
 
       it "should not follow more than 21 redirects" do
@@ -91,11 +91,11 @@ describe Capybara::Mechanize::Driver, 'local' do
   end
 
   it "should default to local mode for relative paths" do
-    driver.should_not be_remote('/')
+    expect(driver).not_to be_remote('/')
   end
 
   it "should default to local mode for the default host" do
-    driver.should_not be_remote('http://www.example.com')
+    expect(driver).not_to be_remote('http://www.example.com')
   end
 
   context "with an app_host" do
@@ -108,7 +108,7 @@ describe Capybara::Mechanize::Driver, 'local' do
     end
 
     it "should treat urls as remote" do
-      driver.should be_remote('http://www.remote.com')
+      expect(driver).to be_remote('http://www.remote.com')
     end
   end
 
@@ -131,26 +131,26 @@ describe Capybara::Mechanize::Driver, 'local' do
       end
 
       it "should allow local hosts to be set" do
-        driver.should_not be_remote('http://subdomain.local.com')
+        expect(driver).not_to be_remote('http://subdomain.local.com')
       end
     end
 
     it "should treat urls with the same host names as local" do
-      driver.should_not be_remote('http://www.local.com')
+      expect(driver).not_to be_remote('http://www.local.com')
     end
 
     it "should treat other urls as remote" do
-      driver.should be_remote('http://www.remote.com')
+      expect(driver).to be_remote('http://www.remote.com')
     end
 
     it "should treat relative paths as remote if the previous request was remote" do
       driver.visit(remote_test_url)
-      driver.should be_remote('/some_relative_link')
+      expect(driver).to be_remote('/some_relative_link')
     end
 
     it "should treat relative paths as local if the previous request was local" do
       driver.visit('http://www.local.com')
-      driver.should_not be_remote('/some_relative_link')
+      expect(driver).not_to be_remote('/some_relative_link')
     end
 
     it "should receive the right host" do
@@ -163,7 +163,7 @@ describe Capybara::Mechanize::Driver, 'local' do
       driver.visit('/host')
 
       should_be_a_local_get
-      driver.should_not be_remote('/first_local')
+      expect(driver).not_to be_remote('/first_local')
     end
 
     it "should consider relative paths to be remote when the previous request was remote" do
@@ -171,7 +171,7 @@ describe Capybara::Mechanize::Driver, 'local' do
       driver.get('/host')
 
       should_be_a_remote_get
-      driver.should be_remote('/second_remote')
+      expect(driver).to be_remote('/second_remote')
     end
 
     it "should always switch to the right context" do
@@ -182,7 +182,7 @@ describe Capybara::Mechanize::Driver, 'local' do
       driver.get('http://www.local.com/host')
 
       should_be_a_local_get
-      driver.should_not be_remote('/second_local')
+      expect(driver).not_to be_remote('/second_local')
     end
 
     it "should follow redirects from local to remote" do
@@ -199,7 +199,7 @@ describe Capybara::Mechanize::Driver, 'local' do
       quietly do
         driver.visit(remote_test_url)
         driver.get('/asdfafadfsdfs')
-        driver.response.status.should be >= 400
+        expect(driver.response.status).to be >= 400
       end
     end
 
@@ -243,11 +243,11 @@ describe Capybara::Mechanize::Driver, 'local' do
   end
 
   def should_be_a_remote_get
-    driver.current_url.should include(remote_test_url)
+    expect(driver.current_url).to include(remote_test_url)
   end
 
   def should_be_a_local_get
-    driver.current_url.should include("www.local.com")
+    expect(driver.current_url).to include("www.local.com")
   end
 
 end

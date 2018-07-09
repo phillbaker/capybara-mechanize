@@ -19,5 +19,9 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency(%q<mechanize>, ["~> 2.7.0"])
   s.add_runtime_dependency(%q<capybara>, [">= 2.4.4", "< 4"])
+  s.add_development_dependency(%q<rake>)
+  s.add_development_dependency(%q<rdoc>)
+  s.add_development_dependency(%q<rspec>, ["~>3.5"])
+  s.add_development_dependency(%q<launchy>, [">= 2.0.4"])
 end
 

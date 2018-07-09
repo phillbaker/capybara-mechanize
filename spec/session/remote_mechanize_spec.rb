@@ -48,13 +48,13 @@ describe Capybara::Session do
 
     describe '#driver' do
       it "should be a mechanize driver" do
-        session.driver.should be_an_instance_of(Capybara::Mechanize::Driver)
+        expect(session.driver).to be_an_instance_of(Capybara::Mechanize::Driver)
       end
     end
 
     describe '#mode' do
       it "should remember the mode" do
-        session.mode.should == :mechanize
+        expect(session.mode).to eq(:mechanize)
       end
     end
 
@@ -63,21 +63,21 @@ describe Capybara::Session do
         session.driver.options[:respect_data_method] = true
         session.visit "/with_html"
         session.click_link "A link with data-method"
-        session.html.should include('The requested object was deleted')
+        expect(session.html).to include('The requested object was deleted')
       end
 
       it "should not use data-method if option is false" do
         session.driver.options[:respect_data_method] = false
         session.visit "/with_html"
         session.click_link "A link with data-method"
-        session.html.should include('Not deleted')
+        expect(session.html).to include('Not deleted')
       end
 
       it "should use data-method if available even if it's capitalized" do
         session.driver.options[:respect_data_method] = true
         session.visit "/with_html"
         session.click_link "A link with capitalized data-method"
-        session.html.should include('The requested object was deleted')
+        expect(session.html).to include('The requested object was deleted')
       end
 
       after do
@@ -90,7 +90,7 @@ describe Capybara::Session do
         it "should submit an empty form-data section if no file is submitted" do
           session.visit("/form")
           session.click_button("Upload Empty")
-          session.html.should include('Successfully ignored empty file field.')
+          expect(session.html).to include('Successfully ignored empty file field.')
         end
       end
     end
@@ -99,13 +99,13 @@ describe Capybara::Session do
       it "follows relative link correctly" do
         session.visit "/subsite/relative_link_to_host"
         session.click_link "host"
-        session.body.should include('request_info2/host')
+        expect(session.body).to include('request_info2/host')
       end
 
       it "follows local link correctly" do
         session.visit "/subsite/local_link_to_host"
         session.click_link "host"
-        session.body.should include('request_info2/host')
+        expect(session.body).to include('request_info2/host')
       end
     end
   end
