@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This class works around some weirdness with Capybara's test suite and sinatra's behavior.
 # We need to make sure that sinatra uses TestApp for at least one request before the Capybara session
 # specs run.  Without this we get errors from sinatra trying to handle requests with TestApp.clone

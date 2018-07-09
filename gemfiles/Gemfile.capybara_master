@@ -6,8 +6,3 @@ gem 'capybara', github: 'jnicklas/capybara'
 
 gem 'sinatra', '~> 2.0'
 gem 'puma'
-
-group :development do
-  gem 'ruby-debug',   :platforms => :ruby_18
-  gem 'debugger', :platforms => :ruby_19
-end

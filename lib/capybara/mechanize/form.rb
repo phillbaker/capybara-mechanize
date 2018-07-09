@@ -1,25 +1,20 @@
-class Capybara::Mechanize::Form < Capybara::RackTest::Form
+# frozen_string_literal: true
 
+class Capybara::Mechanize::Form < Capybara::RackTest::Form
   def params(button)
-    if !use_mechanize?
-      return super
-    end
+    return super unless use_mechanize?
 
     node = {}
     # Create a fake form
     class << node
-      def search(*args); []; end
+      def search(*_args); []; end
     end
 
     node['method'] = button && button['formmethod']
 
     node['method'] ||= (respond_to?(:request_method, true) ? request_method : method).to_s.upcase
 
-    if self.multipart?
-      node['enctype'] = 'multipart/form-data'
-    else
-      node['enctype'] = 'application/x-www-form-urlencoded'
-    end
+    node['enctype'] = multipart? ? 'multipart/form-data' : 'application/x-www-form-urlencoded'
 
     @m_form = Mechanize::Form.new(node, nil, form_referer)
 
@@ -31,20 +26,16 @@ class Capybara::Mechanize::Form < Capybara::RackTest::Form
   private
 
   def merge_param!(params, key, value)
-    if !use_mechanize?
-      return super
-    end
+    return super unless use_mechanize?
 
-    if value.is_a? NilUploadedFile
-      # Adding a nil value here will result in the form element existing with the empty string as its value.
-      # Instead don't add the form element at all.
-      return params
-    end
+    # Adding a nil value here will result in the form element existing with the empty string as its value.
+    # Instead don't add the form element at all.
+    return params if value.is_a? NilUploadedFile
 
     if value.is_a? Rack::Test::UploadedFile
       @m_form.enctype = 'multipart/form-data'
 
-      ul = Mechanize::Form::FileUpload.new({'name' => key.to_s}, value.original_filename)
+      ul = Mechanize::Form::FileUpload.new({ 'name' => key.to_s }, value.original_filename)
       ul.mime_type = value.content_type
       ul.file_data = (value.rewind; value.read)
 
@@ -53,7 +44,7 @@ class Capybara::Mechanize::Form < Capybara::RackTest::Form
       return params
     end
 
-    @m_form.fields << Mechanize::Form::Field.new({'name' => key.to_s}, value)
+    @m_form.fields << Mechanize::Form::Field.new({ 'name' => key.to_s }, value)
 
     params
   end
