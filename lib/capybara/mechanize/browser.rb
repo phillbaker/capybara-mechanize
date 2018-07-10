@@ -31,6 +31,10 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     last_request_remote? ? remote_response : super
   end
 
+  def last_request
+    last_request_remote? ? OpenStruct.new(request_method: @last_method, params: @last_params) : super
+  end
+
   # For each of these http methods, we want to intercept the method call.
   # Then we determine if the call is remote or local.
   # Remote: Handle it with our process_remote_request method.

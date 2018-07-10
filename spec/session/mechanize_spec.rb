@@ -13,7 +13,9 @@ Capybara::SpecHelper.run_specs TestSessions::Mechanize, "Mechanize", :capybara_s
   :hover,
   :modals,
   :about_scheme,
-  :send_keys
+  :send_keys,
+  :css,
+  :download
 ]
 
 describe Capybara::Session do

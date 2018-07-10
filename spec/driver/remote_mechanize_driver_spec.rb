@@ -13,12 +13,12 @@ describe Capybara::Mechanize::Driver, 'remote' do
 
   context "in remote mode" do
     it "should pass arguments through to a get request" do
-      driver.visit("#{remote_test_url}/form/get", {:form => "success"})
+      driver.visit("#{remote_test_url}/form/get", {:form => {:value => "success"}})
       driver.html.should include('success')
     end
 
     it "should pass arguments through to a post request" do
-      driver.post("#{remote_test_url}/form", {:form => "success"})
+      driver.post("#{remote_test_url}/form", {:form => {:value => "success"}})
       driver.html.should include('success')
     end
 

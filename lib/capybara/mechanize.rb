@@ -10,7 +10,7 @@ module Capybara::Mechanize
         [default_host].compact
       end
     end
-    
+
     def local_hosts=(hosts)
       @local_hosts = hosts
     end

@@ -21,3 +21,5 @@ pkg
 ## PROJECT::SPECIFIC
 Gemfile.lock
 gemfiles/*.lock
+
+save_path_tmp
