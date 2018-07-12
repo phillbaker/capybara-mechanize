@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'capybara/spec/test_app'
 
 class ExtendedTestApp < TestApp
@@ -9,19 +11,19 @@ class ExtendedTestApp < TestApp
   end
 
   get '/form_with_relative_action_to_host' do
-    %{<form action="/request_info/host" method="post">
+    %(<form action="/request_info/host" method="post">
        <input type="submit" value="submit" />
-      </form>}
+      </form>)
   end
 
   get '/request_info/form_with_no_action' do
-    %{<form method="post">
+    %(<form method="post">
        <input type="submit" value="submit" />
-      </form>}
+      </form>)
   end
 
   get '/relative_link_to_host' do
-    %{<a href="/request_info/host">host</a>}
+    %(<a href="/request_info/host">host</a>)
   end
 
   get '/request_info/user_agent' do
@@ -37,15 +39,15 @@ class ExtendedTestApp < TestApp
   end
 
   get '/subsite/relative_link_to_host' do
-    %{<a href="/subsite/request_info2/host">host</a>}
+    %(<a href="/subsite/request_info2/host">host</a>)
   end
 
   get '/subsite/local_link_to_host' do
-    %{<a href="request_info2/host">host</a>}
+    %(<a href="request_info2/host">host</a>)
   end
 
   get '/subsite/request_info2/*' do
-    "subsite: " + current_request_info
+    'subsite: ' + current_request_info
   end
 
   get '/redirect_with_http_param' do
@@ -53,25 +55,24 @@ class ExtendedTestApp < TestApp
   end
 
   get '/redirect_target' do
-    %{correct redirect}
+    %(correct redirect)
   end
 
   get %r{/form_posts_to/(.*)} do
-    %{
+    %(
       <form action="#{params[:captures].first}" method="post">
         <input type="submit" value="submit" />
       </form>
-    }
+    )
   end
 
   post '/get_referer' do
-    request.referer.nil? ? "No referer" : "Got referer: #{request.referer}"
+    request.referer.nil? ? 'No referer' : "Got referer: #{request.referer}"
   end
 
   private
 
-    def current_request_info
-      "Current host is #{request.url}, method #{request.request_method.downcase}"
-    end
+  def current_request_info
+    "Current host is #{request.url}, method #{request.request_method.downcase}"
+  end
 end
-

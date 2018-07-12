@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'capybara/rack_test/driver'
 require 'mechanize'
 require 'capybara/mechanize/node'
@@ -39,7 +41,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   # Then we determine if the call is remote or local.
   # Remote: Handle it with our process_remote_request method.
   # Local: Register the local request and call super to let RackTest get it.
-  [:get, :post, :put, :delete].each do |method|
+  %i[get post put delete].each do |method|
     define_method(method) do |path, params = {}, env = {}, &block|
       path = @last_path if path.nil? || path.empty?
 
@@ -81,7 +83,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
 
   def find(format, selector)
-    if format==:css
+    if format == :css
       dom.css(selector, Capybara::RackTest::CSSHandlers.new)
     else
       dom.xpath(selector)
@@ -110,39 +112,37 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
 
   def process_remote_request(method, url, attributes, headers)
-    if remote?(url)
-      uri = URI.parse(url)
-      @last_remote_uri = uri
-      url = uri.to_s
+    return unless remote?(url)
 
-      reset_cache!
-      begin
-        if method == :post
-          if attributes.is_a? Mechanize::Form
-            submit_mechanize_form(url, attributes, headers)
-          else
-            @agent.send(method, url, attributes, headers)
-          end
-        elsif method == :get
-          if attributes.is_a? Mechanize::Form
-            submit_mechanize_form(url, attributes, headers)
-          else
-            referer = headers['HTTP_REFERER']
-            @agent.send(method, url, attributes, referer, headers)
-          end
+    uri = URI.parse(url)
+    @last_remote_uri = uri
+    url = uri.to_s
+
+    reset_cache!
+    begin
+      if method == :post
+        if attributes.is_a? Mechanize::Form
+          submit_mechanize_form(url, attributes, headers)
         else
           @agent.send(method, url, attributes, headers)
         end
-        @errored_remote_response = nil
-      rescue Mechanize::ResponseCodeError => e
-        @errored_remote_response = e.page
-
-        if Capybara.raise_server_errors
-          raise "Received the following error for a #{method.to_s.upcase} request to #{url}: '#{e.message}'"
+      elsif method == :get
+        if attributes.is_a? Mechanize::Form
+          submit_mechanize_form(url, attributes, headers)
+        else
+          referer = headers['HTTP_REFERER']
+          @agent.send(method, url, attributes, referer, headers)
         end
+      else
+        @agent.send(method, url, attributes, headers)
       end
-      @last_request_remote = true
+      @errored_remote_response = nil
+    rescue Mechanize::ResponseCodeError => e
+      @errored_remote_response = e.page
+
+      raise "Received the following error for a #{method.to_s.upcase} request to #{url}: '#{e.message}'" if Capybara.raise_server_errors
     end
+    @last_request_remote = true
   end
 
   def submit_mechanize_form(url, form, headers)
@@ -159,7 +159,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
 
   def default_user_agent
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.853.0 Safari/535.2"
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.853.0 Safari/535.2'
   end
 
   class ResponseProxy
@@ -180,7 +180,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     def headers
       # Hax the content-type contains utf8, so Capybara specs are failing, need to ask mailinglist
       headers = page.response
-      headers["content-type"].gsub!(';charset=utf-8', '') if headers["content-type"]
+      headers['content-type']&.gsub!(';charset=utf-8', '')
       headers
     end
 
@@ -195,8 +195,5 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     def redirect?
       status >= 300 && status < 400
     end
-
   end
-
 end
-
