@@ -35,7 +35,19 @@ Capybara.register_driver :mechanize do |app|
   driver
 end
 ```
+### Usage without rack app
 
+You can configure it to use for external servers. Until this issue https://github.com/jeroenvandijk/capybara-mechanize/issues/66  is resolved, you can configure with
+```
+Capybara.register_driver :mechanize do |app|
+  Capybara::Mechanize::Driver.new(proc {})
+end
+```
+and use like this
+```
+session = Capybara::Session.new :mechanize
+session.visit 'https://github.com'
+```
 ### Usage with Cucumber and tags
 
 A @mechanize tag is added to your hooks when you add the following line to your env.rb
