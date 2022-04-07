@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Capybara::Mechanize::Node < Capybara::RackTest::Node
-  def click(keys = [], offset = {})
-    raise ArgumentError, 'The mechanize driver does not support click options' unless keys.empty? && offset.empty?
+  def click(keys = [], **options)
+    raise ArgumentError, 'The mechanize driver does not support click options' unless keys.empty? && options.empty?
 
     submits = respond_to?(:submits?) ? submits? :
       ((tag_name == 'input' and %w[submit image].include?(type)) or

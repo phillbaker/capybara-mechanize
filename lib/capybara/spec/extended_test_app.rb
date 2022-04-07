@@ -70,6 +70,8 @@ class ExtendedTestApp < TestApp
     request.referer.nil? ? 'No referer' : "Got referer: #{request.referer}"
   end
 
+  @form_post_count = 0
+
   private
 
   def current_request_info

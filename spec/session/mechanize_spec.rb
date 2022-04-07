@@ -6,19 +6,31 @@ module TestSessions
   Mechanize = Capybara::Session.new(:mechanize, TestApp)
 end
 
-Capybara::SpecHelper.run_specs TestSessions::Mechanize, 'Mechanize', capybara_skip: %i[
-  js
-  screenshot
-  frames
-  windows
-  server
-  hover
-  modals
+skipped_tests = %i[
   about_scheme
-  send_keys
+  active_element
   css
   download
+  frames
+  hover
+  html_validation
+  js
+  modals
+  screenshot
+  scroll
+  send_keys
+  server
+  shadow_dom
+  spatial
+  windows
 ]
+
+Capybara::SpecHelper.run_specs(TestSessions::Mechanize, 'Mechanize', capybara_skip: skipped_tests) do |example|
+  case example.metadata[:full_description]
+  when /has_css\? should support case insensitive :class and :id options/
+    skip "Nokogiri doesn't support case insensitive CSS attribute matchers"
+  end
+end
 
 describe Capybara::Session do
   context 'with mechanize driver' do

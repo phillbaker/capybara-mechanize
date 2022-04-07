@@ -16,31 +16,31 @@ shared_context 'remote tests' do
   end
 end
 
-session_describe = Capybara::SpecHelper.run_specs TestSessions::RemoteMechanize, 'RemoteMechanize', capybara_skip: %i[
-  js
-  screenshot
-  frames
-  windows
-  server
-  hover
-  modals
+skipped_tests = %i[
   about_scheme
-  send_keys
+  active_element
   css
   download
+  frames
+  hover
+  html_validation
+  js
+  modals
+  screenshot
+  scroll
+  send_keys
+  server
+  shadow_dom
+  spatial
+  windows
 ]
 
-session_describe.include_context('remote tests')
-
-# We disable additional tests because we don't provide a server, but do test external URls
-disabler = DisableExternalTests.new
-disabler.tests_to_disable = [
-  ['#visit', 'when Capybara.always_include_port is true', 'should fetch a response from the driver with an absolute url without a port'],
-  ['#has_current_path?', 'should compare the full url if url: true is used'],
-  ['#reset_session!', 'raises any errors caught inside the server'],
-  ['#reset_session!', 'raises any standard errors caught inside the server']
-]
-disabler.disable(session_describe)
+Capybara::SpecHelper.run_specs(TestSessions::RemoteMechanize, 'RemoteMechanize', capybara_skip: skipped_tests) do |example|
+  case example.metadata[:full_description]
+  when /has_css\? should support case insensitive :class and :id options/
+    skip "Nokogiri doesn't support case insensitive CSS attribute matchers"
+  end
+end
 
 describe Capybara::Session do
   context 'with remote mechanize driver' do

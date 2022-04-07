@@ -154,7 +154,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
     if errored_remote_response
       ResponseProxy.new(errored_remote_response)
     elsif @agent.current_page
-      ResponseProxy.new(@agent.current_page)
+      ResponseProxy.new(@agent.current_page, current_fragment: @current_fragment)
     end
   end
 
@@ -169,12 +169,15 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
 
     attr_reader :page
 
-    def initialize(page)
+    def initialize(page, current_fragment: nil)
       @page = page
+      @current_fragment = current_fragment
     end
 
     def current_url
-      page.uri.to_s
+      uri = page.uri.dup
+      uri.fragment = @current_fragment if @current_fragment
+      uri.to_s
     end
 
     def headers
