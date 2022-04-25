@@ -1,9 +1,9 @@
 Capybara-mechanize
 ==================
 
-[![Build Status](https://travis-ci.org/jeroenvandijk/capybara-mechanize.png?branch=master)](https://travis-ci.org/jeroenvandijk/capybara-mechanize)
+[![.github/workflows/test_and_release.yml](https://github.com/phillbaker/capybara-mechanize/actions/workflows/test_and_release.yml/badge.svg)](https://github.com/phillbaker/capybara-mechanize/actions/workflows/test_and_release.yml)
 
-This gems makes it possible to use Capybara for (partially) remote testing. It inherits most functionality from the RackTest driver and only uses [Mechanize](https://github.com/sparklemotion/mechanize) for remote requests. 
+This gem makes it possible to use Capybara for (partially) remote testing. It inherits most functionality from the RackTest driver and only uses [Mechanize](https://github.com/sparklemotion/mechanize) for remote requests. 
 
 It is currently in use to test the integration between a Rails application and Twitter authorization and sharing.
 
@@ -14,6 +14,12 @@ Thanks to [Pinkelstar](http://www.pinkelstar.com) for giving me the time and the
 ### Installation
 
     gem install capybara-mechanize
+
+### Compatibility
+
+For support with:
+* Capybara 2.x, use versions of this gem less than or equal 1.11.0
+* Capybara 3.x, use versions of this gem greater than or equal to 1.12.0
 
 ### Usage without Cucumber
 
