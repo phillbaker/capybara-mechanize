@@ -25,3 +25,15 @@ jobs:
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     - name: Run tests
       run: bundle exec rake
+  release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: [test]
+    runs-on: ubuntu-latest
+    name: Release
+    steps:
+      - uses: actions/checkout@v1
+      - name: Release Gem
+        uses: discourse/publish-rubygems-action@b55d7b91b55e61752dc6cbc2972f8e16fe6c1a02
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
