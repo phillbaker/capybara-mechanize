@@ -33,7 +33,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Release Gem
-        uses: discourse/publish-rubygems-action@b55d7b91b55e61752dc6cbc2972f8e16fe6c1a02
+        uses: discourse/publish-rubygems-action@v2
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
