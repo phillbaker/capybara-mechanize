@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.rubygems_version = '1.3.7'
 
-  s.add_runtime_dependency('capybara', ['>= 3.0.0', '< 4'])
+  s.add_runtime_dependency('capybara', ['>= 3.0.0', '< 3.37.0'])
   s.add_runtime_dependency('mechanize', ['~> 2.8.5'])
 
   s.add_development_dependency('launchy', ['>= 2.0.4'])
