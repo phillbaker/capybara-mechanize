@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+source 'http://rubygems.org'
+
+gemspec path: '..'
+
+gem 'capybara', '= 3.36'
+gem 'puma', '~> 5.0'
+gem 'sinatra', '~> 2.0'
