@@ -4,5 +4,5 @@ source 'http://rubygems.org'
 
 gemspec
 
-gem 'puma'
+gem 'puma', '~> 6.0'
 gem 'sinatra', '~> 2.0'
