@@ -2,6 +2,7 @@
 
 class Capybara::Mechanize::Node < Capybara::RackTest::Node
   def click(keys = [], **options)
+    options.delete(:offset)
     raise ArgumentError, 'The mechanize driver does not support click options' unless keys.empty? && options.empty?
 
     submits = respond_to?(:submits?) ? submits? :
