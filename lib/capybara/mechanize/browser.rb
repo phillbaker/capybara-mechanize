@@ -34,7 +34,7 @@ class Capybara::Mechanize::Browser < Capybara::RackTest::Browser
   end
 
   def last_request
-    last_request_remote? ? OpenStruct.new(request_method: @last_method, params: @last_params) : super
+    last_request_remote? ? OpenStruct.new(request_method: @last_method, params: @last_params, url: remote_response.current_url) : super
   end
 
   # For each of these http methods, we want to intercept the method call.

@@ -7,9 +7,16 @@ jobs:
       matrix:
         ruby-version: ['2.6', '2.7', '3.0', '3.1']
         gemfile:
-          - Gemfile
+          - puma5
+          - puma5_capybara36
+          - puma6
+        exclude:
+          - ruby-version: '2.6'
+            gemfile: puma6
+          - ruby-version: '2.6'
+            gemfile: puma5
     env:
-      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
     steps:
     - uses: actions/checkout@v3
     - name: Set up Ruby
