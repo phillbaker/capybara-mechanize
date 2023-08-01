@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'ostruct'
 require 'capybara/rack_test/driver'
 require 'mechanize'
 require 'capybara/mechanize/node'
