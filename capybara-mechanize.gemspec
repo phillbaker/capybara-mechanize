@@ -20,6 +20,10 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.rubygems_version = '1.3.7'
 
+  s.add_runtime_dependency('mutex_m')
+  s.add_runtime_dependency('nkf')
+  s.add_runtime_dependency('reline')
+
   s.add_runtime_dependency('capybara', ['>= 3.0.0', '< 4'])
   s.add_runtime_dependency('mechanize', ['~> 2.8.5'])
 
